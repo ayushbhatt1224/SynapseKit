@@ -7,6 +7,22 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.6.2] — 2026-03-13
+
+### Added
+
+- **CRAG (Corrective RAG)** — `CRAGRetriever` grades retrieved documents for relevance using an LLM, rewrites the query and retries when too few are relevant (closes #152)
+- **Query Decomposition** — `QueryDecompositionRetriever` breaks complex queries into sub-queries, retrieves for each, and deduplicates results (closes #156)
+- **Contextual Compression** — `ContextualCompressionRetriever` compresses retrieved documents to only the relevant excerpts using an LLM (closes #146)
+- **Ensemble Retrieval** — `EnsembleRetriever` fuses results from multiple retrievers using weighted Reciprocal Rank Fusion (closes #147)
+- **SQLite Conversation Memory** — `SQLiteConversationMemory` persists chat history to SQLite with multi-conversation support and optional sliding window (closes #138)
+- **Summary Buffer Memory** — `SummaryBufferMemory` tracks token budget and progressively summarizes older messages when the buffer exceeds the limit (closes #135)
+- **Human Input Tool** — `HumanInputTool` pauses agent execution to ask the user a question, supports custom sync/async input functions (closes #228)
+- **Wikipedia Tool** — `WikipediaTool` searches and fetches Wikipedia article summaries using the REST API, no extra dependencies (closes #202)
+- 30 new tests (512 total)
+
+---
+
 ## [0.6.1] — 2026-03-13
 
 ### Added
