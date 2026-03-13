@@ -61,7 +61,8 @@ class HybridMemory:
             f"Summarize this conversation in {self._summary_max_tokens} tokens or less. "
             f"Capture the key points, decisions, and context:\n\n{conversation}"
         )
-        return await self._llm.generate(prompt)
+        result: str = await self._llm.generate(prompt)
+        return result
 
     async def get_messages_with_summary(self) -> list[dict]:
         """Return messages with older ones replaced by a summary.

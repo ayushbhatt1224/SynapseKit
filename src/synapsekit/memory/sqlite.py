@@ -108,11 +108,11 @@ class SQLiteConversationMemory:
         return [r[0] for r in rows]
 
     def __len__(self) -> int:
-        count = self._conn.execute(
+        row = self._conn.execute(
             "SELECT COUNT(*) FROM messages WHERE conversation_id = ?",
             (self._conversation_id,),
-        ).fetchone()[0]
-        return count
+        ).fetchone()
+        return int(row[0]) if row else 0
 
     def close(self) -> None:
         """Close the database connection."""

@@ -55,6 +55,6 @@ def subgraph_node(
         # Map subgraph output back to parent state keys
         if out_map:
             return {parent_key: result[sub_key] for sub_key, parent_key in out_map.items()}
-        return result
+        return dict(result)
 
     return _fn
