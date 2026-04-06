@@ -1,3 +1,4 @@
+from .html import HTMLTextSplitter
 from .base import BaseSplitter
 from .character import CharacterTextSplitter
 from .code import CodeSplitter
@@ -10,6 +11,7 @@ from .token import TokenAwareSplitter
 
 __all__ = [
     "BaseSplitter",
+    "HTMLTextSplitter",
     "CharacterTextSplitter",
     "CodeSplitter",
     "MarkdownTextSplitter",

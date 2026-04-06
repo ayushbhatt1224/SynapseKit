@@ -74,6 +74,8 @@ from .tools import (
     VectorSearchTool,
     WebScraperTool,
     WebSearchTool,
+    WeatherTool,
+    StripeTool,
     WikipediaTool,
     WolframAlphaTool,
     YouTubeSearchTool,
@@ -141,6 +143,8 @@ __all__ = [
     "WebScraperTool",
     "WebSearchTool",
     "WolframAlphaTool",
+    "WeatherTool",
+    "StripeTool",
     "WikipediaTool",
     "YouTubeSearchTool",
     # PIIRedactor

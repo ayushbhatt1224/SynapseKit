@@ -31,12 +31,14 @@ from .slack import SlackTool
 from .speech_to_text import SpeechToTextTool
 from .sql_query import SQLQueryTool
 from .sql_schema import SQLSchemaInspectionTool
+from .stripe import StripeTool
 from .summarization import SummarizationTool
 from .tavily_search import TavilySearchTool
 from .text_to_speech import TextToSpeechTool
 from .translation import TranslationTool
 from .twilio import TwilioTool
 from .vector_search import VectorSearchTool
+from .weather import WeatherTool
 from .web_scraper import WebScraperTool
 from .web_search import WebSearchTool
 from .wikipedia import WikipediaTool
@@ -77,12 +79,14 @@ __all__ = [
     "SpeechToTextTool",
     "SQLQueryTool",
     "SQLSchemaInspectionTool",
+    "StripeTool",
     "SummarizationTool",
     "TavilySearchTool",
     "TextToSpeechTool",
     "TranslationTool",
     "TwilioTool",
     "VectorSearchTool",
+    "WeatherTool",
     "WebScraperTool",
     "WebSearchTool",
     "WolframAlphaTool",
