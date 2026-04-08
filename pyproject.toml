@@ -94,8 +94,12 @@ dynamodb = ["boto3>=1.34"]
 discord = ["discord.py>=2.0"]
 gcs = ["google-cloud-storage>=2.0"]
 gdrive = ["google-api-python-client>=2.0", "google-auth>=2.0"]
+git = ["gitpython>=3.1"]
+gsheets = ["google-api-python-client>=2.0", "google-auth>=2.0"]
+jira = ["httpx>=0.27"]
 sql = ["sqlalchemy>=2.0"]
 slack = ["slack-sdk>=3.0"]
+supabase = ["supabase>=2.0"]
 notion = ["httpx>=0.27"]
 confluence = ["atlassian-python-api>=3.0", "beautifulsoup4>=4.12"]
 all = [
@@ -144,6 +148,8 @@ all = [
     "google-api-python-client>=2.0",
     "google-auth>=2.0",
     "feedparser>=6.0",
+    "gitpython>=3.1",
+    "supabase>=2.0",
 ]
 
 [dependency-groups]
@@ -228,6 +234,10 @@ module = [
     "synapsekit.loaders.excel",
     "synapsekit.loaders.pptx",
     "synapsekit.loaders.gcs",
+    "synapsekit.loaders.git",
+    "synapsekit.loaders.google_sheets",
+    "synapsekit.loaders.jira",
+    "synapsekit.loaders.supabase",
     "synapsekit.loaders.github",
     "synapsekit.loaders.sql",
     "synapsekit.agents.tools.slack",

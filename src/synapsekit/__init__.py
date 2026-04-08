@@ -157,9 +157,12 @@ from .loaders.csv import CSVLoader
 from .loaders.directory import DirectoryLoader
 from .loaders.email import EmailLoader
 from .loaders.gcs import GCSLoader
+from .loaders.git import GitLoader
 from .loaders.github import GitHubLoader
+from .loaders.google_sheets import GoogleSheetsLoader
 from .loaders.html import HTMLLoader
 from .loaders.image import ImageLoader
+from .loaders.jira import JiraLoader
 from .loaders.json_loader import JSONLoader
 from .loaders.markdown import MarkdownLoader
 from .loaders.pdf import PDFLoader
@@ -342,8 +345,12 @@ __all__ = [
     "EmailLoader",
     "GCSLoader",
     "GitHubLoader",
+    "GitLoader",
+    "GoogleSheetsLoader",
+    "JiraLoader",
     "MarkdownLoader",
     "SQLLoader",
+    "SupabaseLoader",
     "WebLoader",
     "RSSLoader",
     "WikipediaLoader",
