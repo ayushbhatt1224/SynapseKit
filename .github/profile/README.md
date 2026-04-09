@@ -13,12 +13,12 @@ Async-native RAG, agents, and graph workflows. 2 dependencies. Zero magic.
 [![Downloads](https://img.shields.io/pypi/dm/synapsekit?color=0a7bbd&logo=pypi&logoColor=white)](https://pypi.org/project/synapsekit/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-22c55e)](https://github.com/SynapseKit/SynapseKit/blob/main/LICENSE)
-[![Tests](https://img.shields.io/badge/tests-698%20passing-22c55e?logo=pytest&logoColor=white)](https://github.com/SynapseKit/SynapseKit)
+[![Tests](https://img.shields.io/badge/tests-1752%20passing-22c55e?logo=pytest&logoColor=white)](https://github.com/SynapseKit/SynapseKit)
 [![GitHub Stars](https://img.shields.io/github/stars/SynapseKit/SynapseKit?style=social)](https://github.com/SynapseKit/SynapseKit)
 
 <br/>
 
-[Documentation](https://synapsekit.github.io/synapsekit-docs/) &bull; [Quickstart](https://synapsekit.github.io/synapsekit-docs/docs/getting-started/quickstart) &bull; [API Reference](https://synapsekit.github.io/synapsekit-docs/docs/api/llm) &bull; [Roadmap](https://synapsekit.github.io/synapsekit-docs/docs/roadmap) &bull; [Contributing](https://github.com/SynapseKit/SynapseKit/blob/main/CONTRIBUTING.md)
+[Documentation](https://synapsekit.github.io/synapsekit-docs/) &bull; [Quickstart](https://synapsekit.github.io/synapsekit-docs/docs/getting-started/quickstart) &bull; [EvalCI](https://synapsekit.github.io/synapsekit-docs/docs/evalci/overview) &bull; [Roadmap](https://synapsekit.github.io/synapsekit-docs/docs/roadmap) &bull; [Contributing](https://github.com/SynapseKit/SynapseKit/blob/main/CONTRIBUTING.md)
 
 </div>
 
@@ -79,41 +79,41 @@ print(rag.ask_sync("What is the main topic?"))
 <tr>
 <td align="center" width="33%">
 <h4>RAG Pipelines</h4>
-5 text splitters &bull; 7+ loaders<br/>
-BM25 reranking &bull; conversation memory<br/>
+9 text splitters &bull; 33 loaders<br/>
+20+ retrieval strategies &bull; conversation memory<br/>
 streaming retrieval-augmented generation
 </td>
 <td align="center" width="33%">
 <h4>Agents</h4>
 ReAct &bull; native function calling<br/>
-OpenAI, Anthropic, Gemini, Mistral<br/>
-5 built-in tools &bull; fully extensible
+OpenAI, Anthropic, Gemini, Mistral + more<br/>
+46 built-in tools &bull; fully extensible
 </td>
 <td align="center" width="33%">
 <h4>Graph Workflows</h4>
 parallel execution &bull; conditional routing<br/>
-cycle support &bull; checkpointing<br/>
-Mermaid export &bull; subgraphs
+human-in-the-loop &bull; checkpointing<br/>
+Mermaid export &bull; subgraphs &bull; SSE streaming
 </td>
 </tr>
 <tr>
 <td align="center">
-<h4>9 LLM Providers</h4>
-OpenAI &bull; Anthropic &bull; Gemini<br/>
-Mistral &bull; Ollama &bull; Cohere<br/>
-Bedrock &bull; one interface, swap anytime
+<h4>30 LLM Providers</h4>
+OpenAI &bull; Anthropic &bull; Gemini &bull; Groq<br/>
+DeepSeek &bull; Mistral &bull; Ollama &bull; Bedrock<br/>
+and 22 more — one interface, swap anytime
 </td>
 <td align="center">
-<h4>5 Vector Stores</h4>
+<h4>9 Vector Stores</h4>
 InMemory &bull; ChromaDB &bull; FAISS<br/>
-Qdrant &bull; Pinecone<br/>
-all behind VectorStore ABC
+Qdrant &bull; Pinecone &bull; Weaviate<br/>
+PGVector &bull; Milvus &bull; LanceDB
 </td>
 <td align="center">
-<h4>Production Ready</h4>
-LRU response caching<br/>
-exponential backoff retries<br/>
-332 tests &bull; Apache 2.0 licensed
+<h4>🧪 EvalCI</h4>
+LLM quality gates on every PR<br/>
+GitHub Action · zero infra · 2-min setup<br/>
+<a href="https://github.com/marketplace/actions/evalci-by-synapsekit">GitHub Marketplace →</a>
 </td>
 </tr>
 </table>
@@ -126,7 +126,7 @@ exponential backoff retries<br/>
 
 <div align="center">
 
-### See it in action
+### EvalCI — Stop shipping quality regressions
 
 </div>
 
@@ -134,74 +134,32 @@ exponential backoff retries<br/>
 <tr>
 <td width="50%">
 
-**RAG in 3 lines**
+EvalCI is a GitHub Action that runs your `@eval_case` suites on every pull request and blocks merge if quality drops below threshold. No infrastructure, no backend — just add 5 lines to your workflow.
 
-```python
-from synapsekit import RAG
-
-rag = RAG(model="gpt-4o-mini", api_key="sk-...")
-rag.add("Your document text here")
-
-async for token in rag.stream("What is the main topic?"):
-    print(token, end="", flush=True)
+```yaml
+- uses: SynapseKit/evalci@v1
+  with:
+    path: tests/evals
+    threshold: "0.80"
+  env:
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 </td>
 <td width="50%">
 
-**Agent with tools**
-
 ```python
-from synapsekit import FunctionCallingAgent
-from synapsekit.agents.tools import CalculatorTool
+# tests/evals/eval_rag.py
+from synapsekit import eval_case
 
-agent = FunctionCallingAgent(
-    llm=llm,
-    tools=[CalculatorTool()]
-)
-result = await agent.run("What is 42 * 17?")
+@eval_case(min_score=0.80, max_cost_usd=0.01)
+async def eval_rag_relevancy():
+    result = await pipeline.ask("What is SynapseKit?")
+    score = await result.score_relevancy(reference=...)
+    return {"score": score, "cost_usd": result.cost_usd}
 ```
 
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**Graph workflow**
-
-```python
-from synapsekit import StateGraph
-
-graph = StateGraph()
-graph.add_node("fetch", fetch_data)
-graph.add_node("process", process_data)
-graph.add_edge("fetch", "process")
-graph.set_entry("fetch")
-graph.set_finish("process")
-
-app = graph.compile()
-result = await app.run({"query": "hello"})
-```
-
-</td>
-<td width="50%">
-
-**Swap providers in one line**
-
-```python
-from synapsekit import RAG
-
-# OpenAI
-rag = RAG(model="gpt-4o-mini", api_key="sk-...")
-
-# Anthropic
-rag = RAG(model="claude-3-haiku", api_key="sk-ant-...")
-
-# Ollama (local)
-rag = RAG(model="ollama/llama3", api_key="")
-
-# Same API. Same code. Different brain.
-```
+[Get started →](https://synapsekit.github.io/synapsekit-docs/docs/evalci/overview)
 
 </td>
 </tr>
@@ -217,7 +175,7 @@ rag = RAG(model="ollama/llama3", api_key="")
 
 ### Growing fast
 
-**250+ open issues** &bull; **Contributors welcome** &bull; **Apache 2.0 Licensed**
+**1752 tests** &bull; **30 LLM providers** &bull; **46 tools** &bull; **33 loaders** &bull; **Contributors welcome** &bull; **Apache 2.0 Licensed**
 
 We're building the most comprehensive async-native LLM framework in Python.
 Whether you're a seasoned open-source contributor or looking for your first PR — jump in.
@@ -234,6 +192,6 @@ Whether you're a seasoned open-source contributor or looking for your first PR �
 
 <div align="center">
 
-[Documentation](https://synapsekit.github.io/synapsekit-docs/) &bull; [PyPI](https://pypi.org/project/synapsekit/) &bull; [Changelog](https://github.com/SynapseKit/SynapseKit/blob/main/CHANGELOG.md) &bull; [Contributing Guide](https://github.com/SynapseKit/SynapseKit/blob/main/CONTRIBUTING.md)
+[Documentation](https://synapsekit.github.io/synapsekit-docs/) &bull; [EvalCI](https://synapsekit.github.io/synapsekit-docs/docs/evalci/overview) &bull; [PyPI](https://pypi.org/project/synapsekit/) &bull; [Changelog](https://github.com/SynapseKit/SynapseKit/blob/main/CHANGELOG.md) &bull; [Contributing Guide](https://github.com/SynapseKit/SynapseKit/blob/main/CONTRIBUTING.md)
 
 </div>
