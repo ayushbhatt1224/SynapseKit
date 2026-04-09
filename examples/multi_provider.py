@@ -18,8 +18,6 @@ Usage:
 import asyncio
 import os
 
-from synapsekit import BaseLLM
-
 
 # Mock provider configurations (replace with actual imports when available)
 class OpenAIProvider:

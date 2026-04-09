@@ -14,7 +14,6 @@ Usage:
 """
 
 import asyncio
-import os
 from typing import Literal
 
 from synapsekit import END, StateGraph

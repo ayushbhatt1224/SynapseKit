@@ -15,7 +15,6 @@ Usage:
 
 import asyncio
 import os
-from datetime import datetime
 
 from synapsekit import CalculatorTool, DateTimeTool, ReActAgent, tool
 

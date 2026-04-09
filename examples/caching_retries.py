@@ -19,7 +19,7 @@ import asyncio
 import os
 from datetime import datetime
 
-from synapsekit import BaseLLM, BudgetGuard, CostTracker, LLMConfig
+from synapsekit import BudgetGuard, CostTracker, LLMConfig
 
 
 # Simple in-memory cache implementation
@@ -147,7 +147,7 @@ async def demo_cost_tracking():
         if budget.check(current_cost):
             print(f"✅ Under budget (${current_cost:.4f} / $5.00)")
         else:
-            print(f"❌ Budget exceeded!")
+            print("❌ Budget exceeded!")
     except Exception as e:
         print(f"⚠️  {e}")
 
