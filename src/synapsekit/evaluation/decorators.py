@@ -39,6 +39,8 @@ def eval_case(
     """
 
     def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
+        import inspect
+
         meta = EvalCaseMeta(
             min_score=min_score,
             max_cost_usd=max_cost_usd,
@@ -46,6 +48,14 @@ def eval_case(
             tags=tags or [],
         )
         fn._eval_case_meta = meta  # type: ignore[attr-defined]
+
+        if inspect.iscoroutinefunction(fn):
+            @functools.wraps(fn)
+            async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+                return await fn(*args, **kwargs)
+
+            async_wrapper._eval_case_meta = meta  # type: ignore[attr-defined]
+            return async_wrapper
 
         @functools.wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
