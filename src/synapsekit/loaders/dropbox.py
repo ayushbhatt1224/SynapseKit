@@ -4,13 +4,36 @@ import asyncio
 import contextlib
 import os
 import time
+from typing import TYPE_CHECKING
 
 from .base import Document
 
+if TYPE_CHECKING:
+    from dropbox import Dropbox
+
 SUPPORTED_EXTENSIONS = {
-    ".txt", ".md", ".py", ".js", ".ts", ".java", ".cpp", ".c", ".h",
-    ".json", ".csv", ".xml", ".yaml", ".yml", ".html", ".css",
-    ".rb", ".go", ".rs", ".php", ".sh", ".bat",
+    ".txt",
+    ".md",
+    ".py",
+    ".js",
+    ".ts",
+    ".java",
+    ".cpp",
+    ".c",
+    ".h",
+    ".json",
+    ".csv",
+    ".xml",
+    ".yaml",
+    ".yml",
+    ".html",
+    ".css",
+    ".rb",
+    ".go",
+    ".rs",
+    ".php",
+    ".sh",
+    ".bat",
 }
 
 
@@ -31,9 +54,7 @@ class DropboxLoader:
         try:
             import dropbox
         except ImportError:
-            raise ImportError(
-                "dropbox required: pip install synapsekit[dropbox]"
-            ) from None
+            raise ImportError("dropbox required: pip install synapsekit[dropbox]") from None
 
         dbx = dropbox.Dropbox(self._access_token)
         docs: list[Document] = []
@@ -84,7 +105,7 @@ class DropboxLoader:
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self.load)
 
-    def _list_folder(self, dbx: object, path: str) -> list[dict]:
+    def _list_folder(self, dbx: Dropbox, path: str) -> list[dict]:
         entries: list[dict] = []
 
         try:
@@ -104,7 +125,7 @@ class DropboxLoader:
 
         return entries
 
-    def _download_file(self, dbx: object, path: str) -> bytes:
+    def _download_file(self, dbx: Dropbox, path: str) -> bytes:
         import tempfile
 
         with tempfile.NamedTemporaryFile(delete=False) as tmp:

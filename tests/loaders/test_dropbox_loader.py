@@ -50,8 +50,8 @@ class TestDropboxLoader:
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = list_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"Hello, world!")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"Hello, world!"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)
@@ -106,8 +106,8 @@ class TestDropboxLoader:
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = list_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"content")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"content"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)
@@ -154,16 +154,14 @@ class TestDropboxLoader:
             self._make_entry("file3.txt", "/test/file3.txt"),
         ]
 
-        page1_result = self._make_list_result(
-            page1_entries, has_more=True, cursor="cursor1"
-        )
+        page1_result = self._make_list_result(page1_entries, has_more=True, cursor="cursor1")
         page2_result = self._make_list_result(page2_entries, has_more=False)
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = page1_result
         mock_dbx.files_list_folder_continue.return_value = page2_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"content")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"content"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)
@@ -296,8 +294,8 @@ class TestDropboxLoader:
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = list_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"content")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"content"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)
@@ -314,8 +312,8 @@ class TestDropboxLoader:
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = list_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"content")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"content"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)
@@ -347,8 +345,8 @@ class TestDropboxLoader:
 
         mock_dbx = MagicMock()
         mock_dbx.files_list_folder.return_value = list_result
-        mock_dbx.files_download_to_file.side_effect = (
-            lambda fp, dp: open(fp, "wb").write(b"Async content")
+        mock_dbx.files_download_to_file.side_effect = lambda fp, dp: open(fp, "wb").write(
+            b"Async content"
         )
 
         mock_dropbox = self._mock_dropbox(mock_dbx)

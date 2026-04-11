@@ -240,6 +240,7 @@ module = [
     "synapsekit.llm.vertex_ai",
     "synapsekit.loaders.excel",
     "synapsekit.loaders.pptx",
+    "synapsekit.loaders.dropbox",
     "synapsekit.loaders.gcs",
     "synapsekit.loaders.git",
     "synapsekit.loaders.google_sheets",
