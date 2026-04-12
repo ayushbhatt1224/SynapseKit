@@ -170,6 +170,7 @@ from .loaders.markdown import MarkdownLoader
 from .loaders.mongodb import MongoDBLoader
 from .loaders.pdf import PDFLoader
 from .loaders.rss import RSSLoader
+from .loaders.s3 import S3Loader
 from .loaders.sql import SQLLoader
 from .loaders.teams import TeamsLoader
 from .loaders.text import StringLoader, TextLoader
@@ -361,6 +362,7 @@ __all__ = [
     "TeamsLoader",
     "WebLoader",
     "RSSLoader",
+    "S3Loader",
     "WikipediaLoader",
     "ExcelLoader",
     "PowerPointLoader",
@@ -610,6 +612,7 @@ _LAZY_IMPORTS = {
     "GoogleDriveLoader": "loaders.google_drive",
     "MongoDBLoader": "loaders.mongodb",
     "AzureBlobLoader": "loaders.azure_blob",
+    "S3Loader": "loaders.s3",
 }
 
 
