@@ -44,6 +44,14 @@ def _simple_compiled_graph(output: dict) -> object:
 # ------------------------------------------------------------------ #
 
 
+def test_subgraph_node_returns_coroutine_function():
+    import inspect
+
+    sub = _simple_compiled_graph({})
+    node_fn = subgraph_node(sub)
+    assert inspect.iscoroutinefunction(node_fn)
+
+
 def test_invalid_max_recursion_depth_zero_raises():
     sub = _simple_compiled_graph({})
     with pytest.raises(ValueError, match="max_recursion_depth must be >= 1"):
