@@ -152,6 +152,7 @@ from .llm.fallback_chain import FallbackChain, FallbackChainConfig
 from .llm.multimodal import AudioContent, ImageContent, MultimodalMessage
 from .llm.structured import generate_structured
 from .loaders.arxiv import ArXivLoader
+from .loaders.azure_blob import AzureBlobLoader
 from .loaders.base import Document
 from .loaders.confluence import ConfluenceLoader
 from .loaders.csv import CSVLoader
@@ -338,6 +339,7 @@ __all__ = [
     "Document",
     "TextLoader",
     "ArXivLoader",
+    "AzureBlobLoader",
     "StringLoader",
     "PDFLoader",
     "HTMLLoader",
@@ -607,6 +609,7 @@ _LAZY_IMPORTS = {
     "XMLLoader": "loaders.xml_loader",
     "GoogleDriveLoader": "loaders.google_drive",
     "MongoDBLoader": "loaders.mongodb",
+    "AzureBlobLoader": "loaders.azure_blob",
 }
 
 
