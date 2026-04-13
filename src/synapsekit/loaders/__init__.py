@@ -19,6 +19,7 @@ __all__ = [
     "DiscordLoader",
     "DocxLoader",
     "Document",
+    "DynamoDBLoader",
     "DropboxLoader",
     "EPUBLoader",
     "EmailLoader",
@@ -90,6 +91,7 @@ _LOADERS = {
     "WikipediaLoader": ".wikipedia",
     "ConfluenceLoader": ".confluence",
     "MongoDBLoader": ".mongodb",
+    "DynamoDBLoader": ".dynamodb",
     "DropboxLoader": ".dropbox",
     "EPUBLoader": ".epub",
 }
