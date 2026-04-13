@@ -84,6 +84,7 @@ class MCPServer:
         # RAG Mode
         # ------------------------------------------------------------------ #
         if target is not None and type(target).__name__ in ("RAG", "RAGPipeline"):
+
             @server.list_tools()
             async def list_tools() -> list[Tool]:
                 return [
@@ -95,13 +96,15 @@ class MCPServer:
                             "properties": {
                                 "query": {"type": "string", "description": "The search query"}
                             },
-                            "required": ["query"]
-                        }
+                            "required": ["query"],
+                        },
                     )
                 ]
 
             @server.call_tool()
-            async def call_tool(name: str, arguments: dict[str, Any] | None = None) -> list[TextContent]:
+            async def call_tool(
+                name: str, arguments: dict[str, Any] | None = None
+            ) -> list[TextContent]:
                 if name == "rag_query":
                     query = (arguments or {}).get("query", "")
                     try:
@@ -126,12 +129,13 @@ class MCPServer:
                     for i, meta in enumerate(vs._metadata):
                         uri = f"document://{i}"
                         from pydantic import AnyUrl
+
                         resources.append(
                             Resource(
                                 uri=AnyUrl(uri),
                                 name=f"Document {i}",
                                 mimeType="text/plain",
-                                description=json.dumps(meta) if meta else "RAG Document"
+                                description=json.dumps(meta) if meta else "RAG Document",
                             )
                         )
                 return resources
@@ -151,7 +155,12 @@ class MCPServer:
         # ------------------------------------------------------------------ #
         # Agent Mode
         # ------------------------------------------------------------------ #
-        elif target is not None and type(target).__name__ in ("FunctionCallingAgent", "AgentExecutor", "ReActAgent"):
+        elif target is not None and type(target).__name__ in (
+            "FunctionCallingAgent",
+            "AgentExecutor",
+            "ReActAgent",
+        ):
+
             @server.list_tools()
             async def list_tools() -> list[Tool]:
                 return [
@@ -163,13 +172,15 @@ class MCPServer:
                             "properties": {
                                 "query": {"type": "string", "description": "The task or question"}
                             },
-                            "required": ["query"]
-                        }
+                            "required": ["query"],
+                        },
                     )
                 ]
 
             @server.call_tool()
-            async def call_tool(name: str, arguments: dict[str, Any] | None = None) -> list[TextContent]:
+            async def call_tool(
+                name: str, arguments: dict[str, Any] | None = None
+            ) -> list[TextContent]:
                 if name == "agent_run":
                     query = (arguments or {}).get("query", "")
                     try:
@@ -199,7 +210,9 @@ class MCPServer:
                 return result
 
             @server.call_tool()
-            async def call_tool(name: str, arguments: dict[str, Any] | None = None) -> list[TextContent]:
+            async def call_tool(
+                name: str, arguments: dict[str, Any] | None = None
+            ) -> list[TextContent]:
                 tool = tools_map.get(name)
                 if not tool:
                     return [TextContent(type="text", text=f"Unknown tool: {name}")]
@@ -232,21 +245,22 @@ class MCPServer:
 
         asyncio.run(_run())
 
-    async def run_sse(self, host: str = "0.0.0.0", port: int = 8000, api_key: str | None = None) -> Any:
-        """Run as SSE MCP server. Optionally handles API key auth if starlette is installed."""
+    async def run_sse(
+        self, host: str = "0.0.0.0", port: int = 8000, api_key: str | None = None
+    ) -> None:
+        """Run as SSE MCP server (async, blocking until stopped).
+
+        Requires: pip install synapsekit[mcp,serve]
+
+        Args:
+            host: Bind address (default ``0.0.0.0``).
+            port: TCP port (default ``8000``).
+            api_key: Optional Bearer token for API key auth.
+        """
         try:
             from mcp.server.sse import SseServerTransport
         except ImportError:
             raise ImportError("mcp package required: pip install mcp") from None
-
-        server = self._build_server()
-        sse = SseServerTransport("/messages/")
-
-        async def handle_sse(request: Any) -> None:
-            async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
-                await server.run(streams[0], streams[1], server.create_initialization_options())
-
-        self._sse_handler = handle_sse
 
         try:
             import uvicorn
@@ -255,9 +269,20 @@ class MCPServer:
             from starlette.responses import JSONResponse
             from starlette.routing import Route
         except ImportError:
-            if api_key:
-                raise ImportError("starlette and uvicorn are required for API key auth: pip install starlette uvicorn") from None
-            return sse
+            raise ImportError(
+                "starlette and uvicorn are required for SSE transport: "
+                "pip install synapsekit[serve]"
+            ) from None
+
+        server = self._build_server()
+        sse = SseServerTransport("/messages/")
+
+        async def handle_sse(request: Any) -> None:
+            async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
+                await server.run(streams[0], streams[1], server.create_initialization_options())
+
+        async def messages(request: Any) -> None:
+            await sse.handle_post_message(request.scope, request.receive, request._send)
 
         class AuthMiddleware(BaseHTTPMiddleware):
             async def dispatch(self, request: Any, call_next: Any) -> Any:
@@ -266,9 +291,6 @@ class MCPServer:
                     if not auth or auth != f"Bearer {api_key}":
                         return JSONResponse({"error": "Unauthorized"}, status_code=401)
                 return await call_next(request)
-
-        async def messages(request: Any) -> None:
-            await sse.handle_post_message(request.scope, request.receive, request._send)
 
         app = Starlette(
             routes=[
@@ -279,8 +301,6 @@ class MCPServer:
         if api_key:
             app.add_middleware(AuthMiddleware)
 
-        # We need to run it, but run_sse is an async function. Wait, uvicorn.Server.serve() is async.
         config = uvicorn.Config(app, host=host, port=port, log_level="info")
         uvicorn_server = uvicorn.Server(config)
         await uvicorn_server.serve()
-

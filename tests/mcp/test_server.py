@@ -31,6 +31,7 @@ def _make_mock_mcp():
         def decorator(fn):
             registered[key] = fn
             return fn
+
         return lambda: decorator  # @server.list_tools() → decorator(fn)
 
     mock_server_instance.list_tools = decorator_factory("list_tools")
@@ -425,7 +426,10 @@ def test_mcpserver_run_missing_mcp():
     saved = sys.modules.get("mcp")
     saved2 = sys.modules.get("mcp.server.stdio")
     try:
-        with patch.dict(sys.modules, {"mcp": None, "mcp.server": None, "mcp.server.stdio": None, "mcp.types": None}):
+        with patch.dict(
+            sys.modules,
+            {"mcp": None, "mcp.server": None, "mcp.server.stdio": None, "mcp.types": None},
+        ):
             server = MCPServer()
             with pytest.raises(ImportError, match="mcp package required"):
                 server.run()
