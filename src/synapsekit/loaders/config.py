@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import configparser
 import os
-import sys
 
 from .base import Document
 
@@ -119,18 +118,10 @@ class ConfigLoader:
         return docs
 
     def _load_toml(self, content: str) -> list[Document]:
-        if sys.version_info >= (3, 11):
+        try:
             import tomllib
-        else:
-            try:
-                import tomllib  # type: ignore[no-redef]
-            except ImportError:
-                try:
-                    import tomli as tomllib  # type: ignore[no-redef]
-                except ImportError:
-                    raise ImportError(
-                        "tomllib unavailable; upgrade to Python 3.11+ or install tomli"
-                    ) from None
+        except ImportError:
+            raise ImportError("TOML loading requires Python 3.11+") from None
 
         data = tomllib.loads(content)
         if not isinstance(data, dict):
