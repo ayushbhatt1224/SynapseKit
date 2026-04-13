@@ -4,6 +4,7 @@ from .azure_blob import AzureBlobLoader
 from .base import Document
 from .markdown import MarkdownLoader
 from .mongodb import MongoDBLoader
+from .onedrive import OneDriveLoader
 from .s3 import S3Loader
 from .text import StringLoader, TextLoader
 
@@ -33,6 +34,7 @@ __all__ = [
     "MarkdownLoader",
     "MongoDBLoader",
     "NotionLoader",
+    "OneDriveLoader",
     "PDFLoader",
     "RSSLoader",
     "RTFLoader",
@@ -78,6 +80,7 @@ _LOADERS = {
     "JiraLoader": ".jira",
     "SlackLoader": ".slack",
     "NotionLoader": ".notion",
+    "OneDriveLoader": ".onedrive",
     "RSSLoader": ".rss",
     "RTFLoader": ".rtf",
     "S3Loader": ".s3",
