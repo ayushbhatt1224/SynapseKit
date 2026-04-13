@@ -125,9 +125,10 @@ class MCPServer:
                 if vs and hasattr(vs, "_texts") and hasattr(vs, "_metadata"):
                     for i, meta in enumerate(vs._metadata):
                         uri = f"document://{i}"
+                        from pydantic import AnyUrl
                         resources.append(
                             Resource(
-                                uri=uri,
+                                uri=AnyUrl(uri),
                                 name=f"Document {i}",
                                 mimeType="text/plain",
                                 description=json.dumps(meta) if meta else "RAG Document"
@@ -142,9 +143,9 @@ class MCPServer:
                 if vs and hasattr(vs, "_texts") and uri_str.startswith("document://"):
                     try:
                         idx = int(uri_str.split("://")[1])
-                        return vs._texts[idx]
+                        return str(vs._texts[idx])
                     except (ValueError, IndexError):
-                        raise ValueError(f"Resource not found: {uri_str}")
+                        raise ValueError(f"Resource not found: {uri_str}") from None
                 raise ValueError(f"Resource not found: {uri_str}")
 
         # ------------------------------------------------------------------ #
@@ -255,7 +256,7 @@ class MCPServer:
             from starlette.routing import Route
         except ImportError:
             if api_key:
-                raise ImportError("starlette and uvicorn are required for API key auth: pip install starlette uvicorn")
+                raise ImportError("starlette and uvicorn are required for API key auth: pip install starlette uvicorn") from None
             return sse
 
         class AuthMiddleware(BaseHTTPMiddleware):

@@ -13,7 +13,6 @@ import pytest
 
 from synapsekit.mcp.server.core import MCPServer
 
-
 # ------------------------------------------------------------------ #
 # Helpers
 # ------------------------------------------------------------------ #
@@ -67,10 +66,10 @@ def _make_mock_mcp():
 
 def test_mcpserver_import():
     """MCPServer can be imported from both module and top-level."""
-    from synapsekit import MCPServer as TSL
+    from synapsekit import MCPServer as TopLevelServer
     from synapsekit.mcp.server.core import MCPServer as Core
 
-    assert Core is TSL
+    assert TopLevelServer is Core
 
 
 def test_mcpserver_default_init():
@@ -146,7 +145,7 @@ async def test_mcpserver_rag_registers_query_tool():
     mock_rag.ask = AsyncMock(return_value="answer")
     mock_rag._vectorstore = MagicMock(_texts=[], _metadata=[])
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -163,7 +162,7 @@ async def test_mcpserver_rag_query_calls_ask():
     mock_rag.ask = AsyncMock(return_value="RAG answer")
     mock_rag._vectorstore = MagicMock(_texts=[], _metadata=[])
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -182,7 +181,7 @@ async def test_mcpserver_rag_unknown_tool_returns_error_not_exception():
     mock_rag.ask = AsyncMock(return_value="x")
     mock_rag._vectorstore = MagicMock(_texts=[], _metadata=[])
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -204,7 +203,7 @@ async def test_mcpserver_rag_registers_resource_handlers():
         _metadata=[{"src": "a"}, {"src": "b"}],
     )
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -224,7 +223,7 @@ async def test_mcpserver_rag_list_resources_returns_correct_count():
         _metadata=[{}, {}, {}],
     )
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -244,7 +243,7 @@ async def test_mcpserver_rag_read_resource_returns_document_text():
         _metadata=[{}, {}],
     )
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -261,7 +260,7 @@ async def test_mcpserver_rag_read_resource_invalid_index():
     mock_rag.ask = AsyncMock(return_value="x")
     mock_rag._vectorstore = MagicMock(_texts=["only one"], _metadata=[{}])
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag)
@@ -282,7 +281,7 @@ async def test_mcpserver_agent_registers_run_tool():
     mock_agent.__class__.__name__ = "FunctionCallingAgent"
     mock_agent.run = AsyncMock(return_value="done")
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_agent)
@@ -298,7 +297,7 @@ async def test_mcpserver_agent_run_calls_agent():
     mock_agent.__class__.__name__ = "FunctionCallingAgent"
     mock_agent.run = AsyncMock(return_value="Agent answer")
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_agent)
@@ -314,7 +313,7 @@ async def test_mcpserver_react_agent_wrapping():
     mock_agent.__class__.__name__ = "ReActAgent"
     mock_agent.run = AsyncMock(return_value="ReAct answer")
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_agent)
@@ -329,7 +328,7 @@ async def test_mcpserver_executor_wrapping():
     mock_exec.__class__.__name__ = "AgentExecutor"
     mock_exec.run = AsyncMock(return_value="exec answer")
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_exec)
@@ -352,7 +351,7 @@ async def test_mcpserver_tools_mode_dispatch():
     mock_result = MagicMock(is_error=False, output="42")
     mock_tool.run = AsyncMock(return_value=mock_result)
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(tools=[mock_tool])
@@ -364,7 +363,7 @@ async def test_mcpserver_tools_mode_dispatch():
 
 async def test_mcpserver_tools_mode_unknown_tool():
     """Tools mode returns error TextContent for unknown tool, not exception."""
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer()
@@ -382,7 +381,7 @@ async def test_mcpserver_tool_error_propagates_as_content():
     mock_tool.parameters = {}
     mock_tool.run = AsyncMock(side_effect=RuntimeError("kaboom"))
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(tools=[mock_tool])
@@ -407,7 +406,7 @@ async def test_mcpserver_combined_rag_and_extra_tools():
     mock_extra = MagicMock()
     mock_extra.name = "extra"
 
-    mock_server_mod, mock_types, mock_srv, registered = _make_mock_mcp()
+    mock_server_mod, mock_types, _mock_srv, registered = _make_mock_mcp()
 
     with patch.dict(sys.modules, {"mcp.server": mock_server_mod, "mcp.types": mock_types}):
         server = MCPServer(mock_rag, tools=[mock_extra])
