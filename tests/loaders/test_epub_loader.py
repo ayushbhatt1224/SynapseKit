@@ -12,6 +12,7 @@ from synapsekit.loaders.epub import EPUBLoader, _html_to_text
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_item(name: str, content: bytes, item_type: int = 9) -> MagicMock:
     """Build a fake ebooklib item (ITEM_DOCUMENT = 9)."""
     item = MagicMock()
@@ -21,7 +22,9 @@ def _make_item(name: str, content: bytes, item_type: int = 9) -> MagicMock:
     return item
 
 
-def _fake_ebooklib(items: list[MagicMock], title: str = "My Book", author: str = "Author") -> dict[str, ModuleType]:
+def _fake_ebooklib(
+    items: list[MagicMock], title: str = "My Book", author: str = "Author"
+) -> dict[str, ModuleType]:
     """Inject a minimal fake ebooklib into sys.modules."""
     item_document = 9
 
@@ -45,6 +48,7 @@ def _fake_ebooklib(items: list[MagicMock], title: str = "My Book", author: str =
 # _html_to_text unit tests (no mocking needed)
 # ---------------------------------------------------------------------------
 
+
 class TestHtmlToText:
     def test_strips_tags(self):
         assert _html_to_text(b"<p>Hello <b>World</b></p>") == "Hello World"
@@ -67,6 +71,7 @@ class TestHtmlToText:
 # ---------------------------------------------------------------------------
 # EPUBLoader tests
 # ---------------------------------------------------------------------------
+
 
 class TestEPUBLoader:
     def test_file_not_found(self):
