@@ -8,7 +8,6 @@ import pytest
 from synapsekit.loaders import Document
 from synapsekit.loaders.elasticsearch import ElasticsearchLoader
 
-
 # ---------------------------------------------------------------------------
 # Initialisation validation
 # ---------------------------------------------------------------------------
