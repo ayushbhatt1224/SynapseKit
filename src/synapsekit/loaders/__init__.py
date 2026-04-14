@@ -21,6 +21,7 @@ __all__ = [
     "Document",
     "DropboxLoader",
     "EPUBLoader",
+    "ElasticsearchLoader",
     "EmailLoader",
     "GCSLoader",
     "GitHubLoader",
@@ -92,6 +93,7 @@ _LOADERS = {
     "MongoDBLoader": ".mongodb",
     "DropboxLoader": ".dropbox",
     "EPUBLoader": ".epub",
+    "ElasticsearchLoader": ".elasticsearch",
 }
 
 
