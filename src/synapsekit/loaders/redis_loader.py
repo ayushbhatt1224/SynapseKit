@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from typing import Any
 
 from .base import Document
 
@@ -61,26 +62,26 @@ class RedisLoader:
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self.load)
 
-    def _fetch_text(self, client: object, key: str) -> str:
+    def _fetch_text(self, client: Any, key: str) -> str:
         if self._value_type == "string":
             return self._fetch_string(client, key)
         if self._value_type == "hash":
             return self._fetch_hash(client, key)
         return self._fetch_json(client, key)
 
-    def _fetch_string(self, client: object, key: str) -> str:
+    def _fetch_string(self, client: Any, key: str) -> str:
         value = client.get(key)
         if value is None:
             return ""
         return str(value)
 
-    def _fetch_hash(self, client: object, key: str) -> str:
+    def _fetch_hash(self, client: Any, key: str) -> str:
         data: dict[str, str] = client.hgetall(key)
         if not data:
             return ""
         return " ".join(f"{k}: {v}" for k, v in data.items())
 
-    def _fetch_json(self, client: object, key: str) -> str:
+    def _fetch_json(self, client: Any, key: str) -> str:
         raw = client.get(key)
         if raw is None:
             return ""
