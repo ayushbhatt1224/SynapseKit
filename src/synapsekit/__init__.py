@@ -381,6 +381,7 @@ __all__ = [
     "WikipediaLoader",
     "ExcelLoader",
     "PowerPointLoader",
+    "ParquetLoader",
     # Parsers
     "JSONParser",
     "PydanticParser",
@@ -632,6 +633,7 @@ _LAZY_IMPORTS = {
     "AzureBlobLoader": "loaders.azure_blob",
     "S3Loader": "loaders.s3",
     "DropboxLoader": "loaders.dropbox",
+    "ParquetLoader": "loaders.parquet",
 }
 
 
