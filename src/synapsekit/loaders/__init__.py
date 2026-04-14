@@ -38,6 +38,7 @@ __all__ = [
     "PDFLoader",
     "RSSLoader",
     "RTFLoader",
+    "RedisLoader",
     "S3Loader",
     "SQLLoader",
     "SlackLoader",
@@ -92,6 +93,7 @@ _LOADERS = {
     "MongoDBLoader": ".mongodb",
     "DropboxLoader": ".dropbox",
     "EPUBLoader": ".epub",
+    "RedisLoader": ".redis_loader",
 }
 
 
