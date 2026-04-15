@@ -6,6 +6,7 @@ Verifies:
   - Summary output is well-formed with all required keys
   - Cost estimate is present and non-negative
 """
+
 from __future__ import annotations
 
 from synapsekit.observability.tracer import TokenTracer

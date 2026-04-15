@@ -6,6 +6,7 @@ Verifies correctness of memory semantics:
   - Clear resets state
   - AgentMemory step tracking
 """
+
 from __future__ import annotations
 
 import pytest

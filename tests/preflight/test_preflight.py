@@ -9,6 +9,7 @@ They verify:
   - All async interfaces are proper coroutines (inspect.iscoroutinefunction).
   - Key classes instantiate with no exceptions when given mock dependencies.
 """
+
 from __future__ import annotations
 
 import importlib

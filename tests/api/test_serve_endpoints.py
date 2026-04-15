@@ -9,6 +9,7 @@ Tests all HTTP endpoints exposed by build_app():
 Uses httpx.AsyncClient with the ASGI transport — no real server needed.
 Requires: pip install fastapi httpx
 """
+
 from __future__ import annotations
 
 import json
@@ -65,6 +66,7 @@ def _make_agent_mock(answer: str = "Agent done") -> _FakeFunctionCallingAgent:
 
 def _make_graph_mock(result: dict | None = None) -> _FakeCompiledGraph:
     return _FakeCompiledGraph(result)
+
 
 # ---------------------------------------------------------------------------
 # _detect_type unit tests

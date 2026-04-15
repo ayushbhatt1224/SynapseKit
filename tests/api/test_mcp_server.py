@@ -8,6 +8,7 @@ Tests the SSE transport layer of MCPServer:
 
 All MCP SDK types are mocked — mcp package not required.
 """
+
 from __future__ import annotations
 
 import sys

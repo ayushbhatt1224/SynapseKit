@@ -2,6 +2,7 @@
 
 Tests full compile → run cycles for StateGraph with no API calls.
 """
+
 from __future__ import annotations
 
 import pytest

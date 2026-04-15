@@ -3,6 +3,7 @@
 These tests exercise the full RAG flow (add → retrieve → ask) using mocked LLMs.
 No API keys are required; no network calls are made.
 """
+
 from __future__ import annotations
 
 from unittest.mock import AsyncMock, MagicMock
