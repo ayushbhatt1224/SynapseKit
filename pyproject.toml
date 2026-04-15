@@ -111,6 +111,7 @@ confluence = ["atlassian-python-api>=3.0", "beautifulsoup4>=4.12"]
 dropbox = ["dropbox>=12.0"]
 rtf = ["striprtf>=0.0.26"]
 epub = ["ebooklib>=0.18"]
+browser = ["playwright>=1.40"]
 all = [
     "openai>=1.0",
     "anthropic>=0.25",
