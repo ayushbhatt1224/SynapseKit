@@ -159,6 +159,7 @@ from .loaders.config import ConfigLoader
 from .loaders.confluence import ConfluenceLoader
 from .loaders.csv import CSVLoader
 from .loaders.directory import DirectoryLoader
+from .loaders.dynamodb import DynamoDBLoader
 from .loaders.email import EmailLoader
 from .loaders.epub import EPUBLoader
 from .loaders.gcs import GCSLoader
@@ -279,6 +280,7 @@ __all__ = [
     "DeepSeekLLM",
     "FireworksLLM",
     "GroqLLM",
+    "GPT4AllLLM",
     "HuggingFaceLLM",
     "MinimaxLLM",
     "MoonshotLLM",
@@ -292,6 +294,7 @@ __all__ = [
     "WriterLLM",
     "ZhipuLLM",
     "LMStudioLLM",
+    "VLLMLLM",
     # Embeddings
     "SynapsekitEmbeddings",
     # Vector stores
@@ -305,6 +308,7 @@ __all__ = [
     "QdrantVectorStore",
     "PineconeVectorStore",
     "WeaviateVectorStore",
+    "SQLiteVecStore",
     # Retrieval
     "Retriever",
     "AdaptiveRAGRetriever",
@@ -359,6 +363,7 @@ __all__ = [
     "DirectoryLoader",
     "DropboxLoader",
     "EPUBLoader",
+    "ElasticsearchLoader",
     "ConfluenceLoader",
     "DocxLoader",
     "EmailLoader",
@@ -370,6 +375,7 @@ __all__ = [
     "LaTeXLoader",
     "MarkdownLoader",
     "MongoDBLoader",
+    "DynamoDBLoader",
     "OneDriveLoader",
     "SQLLoader",
     "SupabaseLoader",
@@ -377,10 +383,12 @@ __all__ = [
     "WebLoader",
     "RSSLoader",
     "RTFLoader",
+    "RedisLoader",
     "S3Loader",
     "WikipediaLoader",
     "ExcelLoader",
     "PowerPointLoader",
+    "ParquetLoader",
     # Parsers
     "JSONParser",
     "PydanticParser",
@@ -589,6 +597,7 @@ _LAZY_IMPORTS = {
     "QdrantVectorStore": "retrieval.qdrant",
     "PineconeVectorStore": "retrieval.pinecone",
     "WeaviateVectorStore": "retrieval.weaviate",
+    "SQLiteVecStore": "retrieval.sqlite_vec",
     # LLM providers
     "AsyncLRUCache": "llm._cache",
     "DynamoDBCacheBackend": "llm._cache_dynamodb",
@@ -599,6 +608,7 @@ _LAZY_IMPORTS = {
     "DeepSeekLLM": "llm.deepseek",
     "FireworksLLM": "llm.fireworks",
     "GroqLLM": "llm.groq",
+    "GPT4AllLLM": "llm.gpt4all",
     "HuggingFaceLLM": "llm.huggingface",
     "OpenRouterLLM": "llm.openrouter",
     "PerplexityLLM": "llm.perplexity",
@@ -612,6 +622,7 @@ _LAZY_IMPORTS = {
     "WriterLLM": "llm.writer",
     "ZhipuLLM": "llm.zhipu",
     "LMStudioLLM": "llm.lmstudio",
+    "VLLMLLM": "llm.vllm",
     "CloudflareLLM": "llm.cloudflare",
     # Checkpointers
     "RedisCheckpointer": "graph.checkpointers.redis",
@@ -632,6 +643,9 @@ _LAZY_IMPORTS = {
     "AzureBlobLoader": "loaders.azure_blob",
     "S3Loader": "loaders.s3",
     "DropboxLoader": "loaders.dropbox",
+    "ParquetLoader": "loaders.parquet",
+    "RedisLoader": "loaders.redis_loader",
+    "ElasticsearchLoader": "loaders.elasticsearch",
 }
 
 

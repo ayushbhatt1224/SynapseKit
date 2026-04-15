@@ -162,13 +162,21 @@ def _make_llm(
         from ..llm.llamacpp import LlamaCppLLM
 
         return LlamaCppLLM(config, model_path=config.model)
+    elif provider == "vllm":
+        from ..llm.vllm import VLLMLLM
+
+        return VLLMLLM(config)
+    elif provider == "gpt4all":
+        from ..llm.gpt4all import GPT4AllLLM
+
+        return GPT4AllLLM(config)
     else:
         raise ValueError(
             f"Unknown provider: {provider!r}. "
             "Use 'openai', 'anthropic', 'ollama', 'ai21', 'cohere', 'mistral', 'gemini', "
             "'bedrock', 'groq', 'deepseek', 'openrouter', 'together', 'fireworks', "
             "'moonshot', 'minimax', 'zhipu', 'cloudflare', 'databricks', 'ernie', 'sambanova', "
-            "'aleph-alpha', or 'llamacpp'."
+            "'aleph-alpha', 'llamacpp', 'vllm', or 'gpt4all'."
         )
 
 
