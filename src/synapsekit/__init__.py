@@ -254,7 +254,7 @@ from .text_splitters import (
     TokenAwareSplitter,
 )
 
-__version__ = "1.3.0"
+__version__ = "1.5.5"
 __all__ = [
     # Facade
     "RAG",
