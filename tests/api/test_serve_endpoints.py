@@ -12,13 +12,14 @@ Requires: pip install fastapi httpx
 from __future__ import annotations
 
 import json
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
+from synapsekit.cli.serve import _detect_type, build_app
+
 try:
     from fastapi.testclient import TestClient
-    from httpx import AsyncClient, ASGITransport
 
     FASTAPI_AVAILABLE = True
 except ImportError:
@@ -64,15 +65,6 @@ def _make_agent_mock(answer: str = "Agent done") -> _FakeFunctionCallingAgent:
 
 def _make_graph_mock(result: dict | None = None) -> _FakeCompiledGraph:
     return _FakeCompiledGraph(result)
-
-
-# ---------------------------------------------------------------------------
-# Import the builder
-# ---------------------------------------------------------------------------
-
-
-from synapsekit.cli.serve import build_app, _detect_type
-
 
 # ---------------------------------------------------------------------------
 # _detect_type unit tests
