@@ -7553,7 +7553,7 @@ wheels = [
 
 [[package]]
 name = "synapsekit"
-version = "1.5.3"
+version = "1.5.5"
 source = { editable = "." }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -7752,6 +7752,9 @@ ollama = [
 openai = [
     { name = "openai" },
 ]
+parquet = [
+    { name = "pyarrow" },
+]
 pdf = [
     { name = "pypdf" },
 ]
@@ -7841,6 +7844,7 @@ dev = [
     { name = "httpx" },
     { name = "mypy" },
     { name = "pre-commit" },
+    { name = "pyarrow" },
     { name = "pydantic" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -7943,6 +7947,7 @@ requires-dist = [
     { name = "psycopg", extras = ["binary"], marker = "extra == 'all'", specifier = ">=3.1" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'pgvector'", specifier = ">=3.1" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = ">=3.1" },
+    { name = "pyarrow", marker = "extra == 'parquet'", specifier = ">=14.0" },
     { name = "pymilvus", marker = "extra == 'all'", specifier = ">=2.4" },
     { name = "pymilvus", marker = "extra == 'milvus'", specifier = ">=2.4" },
     { name = "pymongo", marker = "extra == 'all'", specifier = ">=4.0" },
@@ -7980,7 +7985,7 @@ requires-dist = [
     { name = "youtube-search-python", marker = "extra == 'all'", specifier = ">=1.6" },
     { name = "youtube-search-python", marker = "extra == 'youtube'", specifier = ">=1.6" },
 ]
-provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "ollama", "lmstudio", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "ernie", "minimax", "serve", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "gdrive", "git", "gsheets", "jira", "sql", "mongodb", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "all"]
+provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "ollama", "lmstudio", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "ernie", "minimax", "serve", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "gdrive", "git", "gsheets", "jira", "sql", "mongodb", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "parquet", "all"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -7989,6 +7994,7 @@ dev = [
     { name = "httpx", specifier = ">=0.27" },
     { name = "mypy", specifier = ">=1.11" },
     { name = "pre-commit", specifier = ">=3.7" },
+    { name = "pyarrow", specifier = ">=23.0.1" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-asyncio", specifier = ">=0.23" },

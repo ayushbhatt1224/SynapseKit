@@ -36,6 +36,7 @@ __all__ = [
     "NotionLoader",
     "OneDriveLoader",
     "PDFLoader",
+    "ParquetLoader",
     "RSSLoader",
     "RTFLoader",
     "S3Loader",
@@ -92,6 +93,7 @@ _LOADERS = {
     "MongoDBLoader": ".mongodb",
     "DropboxLoader": ".dropbox",
     "EPUBLoader": ".epub",
+    "ParquetLoader": ".parquet",
 }
 
 
