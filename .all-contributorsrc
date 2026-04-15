@@ -84,6 +84,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/146837343?v=4",
       "profile": "https://github.com/Chaturvediharsh123",
       "contributions": ["doc"]
+    },
+    {
+      "login": "mikemolinet",
+      "name": "mikemolinet",
+      "avatar_url": "https://avatars.githubusercontent.com/u/237856306?v=4",
+      "profile": "https://github.com/mikemolinet",
+      "contributions": ["code", "bugfix"]
     }
   ],
   "contributorsPerLine": 7
