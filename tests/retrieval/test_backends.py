@@ -364,9 +364,9 @@ class TestMongoDBAtlasVectorStore:
     async def test_add_and_search_with_metadata_filter(self):
         mock_pymongo, mock_collection = self._make_mongodb_mocks()
         with patch.dict("sys.modules", {"pymongo": mock_pymongo}):
-            from synapsekit.retrieval.mongodb_atlas import MongoDBAtlasVectorStore
+            import synapsekit.retrieval.mongodb_atlas as mongo_mod
 
-            store = MongoDBAtlasVectorStore(
+            store = mongo_mod.MongoDBAtlasVectorStore(
                 make_mock_embeddings(),
                 database_name="db",
                 collection_name="docs",
@@ -393,9 +393,9 @@ class TestMongoDBAtlasVectorStore:
     async def test_search_supports_raw_mql_filter(self):
         mock_pymongo, mock_collection = self._make_mongodb_mocks()
         with patch.dict("sys.modules", {"pymongo": mock_pymongo}):
-            from synapsekit.retrieval.mongodb_atlas import MongoDBAtlasVectorStore
+            import synapsekit.retrieval.mongodb_atlas as mongo_mod
 
-            store = MongoDBAtlasVectorStore(make_mock_embeddings())
+            store = mongo_mod.MongoDBAtlasVectorStore(make_mock_embeddings())
             raw_filter = {
                 "$or": [{"metadata.category": "test"}, {"metadata.priority": {"$gte": 1}}]
             }

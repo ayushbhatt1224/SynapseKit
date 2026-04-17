@@ -229,6 +229,7 @@ from .retrieval.flare import FLARERetriever
 from .retrieval.graphrag import GraphRAGRetriever, KnowledgeGraph
 from .retrieval.hybrid_search import HybridSearchRetriever
 from .retrieval.hyde import HyDERetriever
+from .retrieval.mongodb_atlas import MongoDBAtlasVectorStore
 from .retrieval.multi_step import MultiStepRetriever
 from .retrieval.parent_document import ParentDocumentRetriever
 from .retrieval.query_decomposition import QueryDecompositionRetriever
@@ -586,7 +587,6 @@ _LAZY_IMPORTS = {
     "FAISSVectorStore": "retrieval.faiss",
     "LanceDBVectorStore": "retrieval.lancedb",
     "MilvusVectorStore": "retrieval.milvus",
-    "MongoDBAtlasVectorStore": "retrieval.mongodb_atlas",
     "PGVectorStore": "retrieval.pgvector",
     "QdrantVectorStore": "retrieval.qdrant",
     "PineconeVectorStore": "retrieval.pinecone",
