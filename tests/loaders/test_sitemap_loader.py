@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from synapsekit.loaders import Document
 from synapsekit.loaders.sitemap import SitemapLoader, _parse_sitemap
-
 
 # ---------------------------------------------------------------------------
 # Sitemap XML fixtures

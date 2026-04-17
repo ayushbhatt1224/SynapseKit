@@ -36,9 +36,9 @@ def _parse_sitemap(xml: str, base_url: str) -> tuple[list[dict[str, str]], list[
 
     # Sitemap index — contains nested <sitemap> entries
     index_urls = [
-        urljoin(base_url, tag.find("loc").get_text(strip=True))
+        urljoin(base_url, loc_tag.get_text(strip=True))
         for tag in soup.find_all("sitemap")
-        if tag.find("loc")
+        if (loc_tag := tag.find("loc"))
     ]
 
     # Regular sitemap — contains <url> entries
@@ -130,7 +130,7 @@ class SitemapLoader:
                     # NOTE: failures are intentionally ignored for robustness
                     if isinstance(result, Exception):
                         continue
-                    if result:
+                    if isinstance(result, Document):
                         docs.append(result)
 
         return docs
