@@ -12,6 +12,7 @@ __all__ = [
     "ArXivLoader",
     "AudioLoader",
     "AzureBlobLoader",
+    "BigQueryLoader",
     "CSVLoader",
     "ConfigLoader",
     "ConfluenceLoader",
@@ -60,6 +61,7 @@ __all__ = [
 _LOADERS = {
     "ArXivLoader": ".arxiv",
     "AzureBlobLoader": ".azure_blob",
+    "BigQueryLoader": ".bigquery",
     "PDFLoader": ".pdf",
     "HTMLLoader": ".html",
     "LaTeXLoader": ".latex",
