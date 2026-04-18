@@ -188,26 +188,26 @@ def test_load_empty_transcript_returns_empty() -> None:
 
 
 def _patched_lib_with_errors() -> tuple[MagicMock, type, type, type]:
-    """Return (mock_lib, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable)."""
-    class TranscriptsDisabled(Exception): ...
-    class NoTranscriptFound(Exception): ...
-    class VideoUnavailable(Exception): ...
+    """Return (mock_lib, TranscriptsDisabledError, NoTranscriptFoundError, VideoUnavailableError)."""
+    class TranscriptsDisabledError(Exception): ...
+    class NoTranscriptFoundError(Exception): ...
+    class VideoUnavailableError(Exception): ...
 
     errors_mod = MagicMock()
-    errors_mod.TranscriptsDisabled = TranscriptsDisabled
-    errors_mod.NoTranscriptFound = NoTranscriptFound
-    errors_mod.VideoUnavailable = VideoUnavailable
+    errors_mod.TranscriptsDisabled = TranscriptsDisabledError
+    errors_mod.NoTranscriptFound = NoTranscriptFoundError
+    errors_mod.VideoUnavailable = VideoUnavailableError
 
     mock_lib = MagicMock()
     mock_lib._errors = errors_mod
 
-    return mock_lib, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
+    return mock_lib, TranscriptsDisabledError, NoTranscriptFoundError, VideoUnavailableError
 
 
 def test_transcripts_disabled_returns_empty() -> None:
-    mock_lib, TD, _, _ = _patched_lib_with_errors()
+    mock_lib, transcripts_disabled_error, _, _ = _patched_lib_with_errors()
     api = MagicMock()
-    api.fetch.side_effect = TD()
+    api.fetch.side_effect = transcripts_disabled_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
     with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
@@ -217,9 +217,9 @@ def test_transcripts_disabled_returns_empty() -> None:
 
 
 def test_no_transcript_found_returns_empty() -> None:
-    mock_lib, _, NTF, _ = _patched_lib_with_errors()
+    mock_lib, _, no_transcript_found_error, _ = _patched_lib_with_errors()
     api = MagicMock()
-    api.fetch.side_effect = NTF()
+    api.fetch.side_effect = no_transcript_found_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
     with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
@@ -229,9 +229,9 @@ def test_no_transcript_found_returns_empty() -> None:
 
 
 def test_video_unavailable_returns_empty() -> None:
-    mock_lib, _, _, VU = _patched_lib_with_errors()
+    mock_lib, _, _, video_unavailable_error = _patched_lib_with_errors()
     api = MagicMock()
-    api.fetch.side_effect = VU()
+    api.fetch.side_effect = video_unavailable_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
     with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
