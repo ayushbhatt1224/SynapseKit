@@ -55,7 +55,9 @@ def _make_snippet(text: str, start: float = 0.0, duration: float = 2.0) -> Magic
     return s
 
 
-def _make_transcript(snippets: list[MagicMock], lang: str = "English", code: str = "en") -> MagicMock:
+def _make_transcript(
+    snippets: list[MagicMock], lang: str = "English", code: str = "en"
+) -> MagicMock:
     t = MagicMock()
     t.language = lang
     t.language_code = code
@@ -97,7 +99,10 @@ def test_load_returns_single_document() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         loader = YouTubeLoader(FAKE_ID)
         docs = loader.load()
 
@@ -116,7 +121,10 @@ def test_load_text_is_joined() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     assert docs[0].text == "Part one Part two"
@@ -133,7 +141,10 @@ def test_load_metadata_correctness() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     meta = docs[0].metadata
@@ -154,7 +165,10 @@ def test_load_with_language_passes_languages_arg() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         YouTubeLoader(FAKE_ID, language="es").load()
 
     api_instance.fetch.assert_called_once_with(FAKE_ID, languages=["es"])
@@ -176,7 +190,10 @@ def test_load_empty_transcript_returns_empty() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     assert docs == []
@@ -189,8 +206,11 @@ def test_load_empty_transcript_returns_empty() -> None:
 
 def _patched_lib_with_errors() -> tuple[MagicMock, type, type, type]:
     """Return (mock_lib, TranscriptsDisabledError, NoTranscriptFoundError, VideoUnavailableError)."""
+
     class TranscriptsDisabledError(Exception): ...
+
     class NoTranscriptFoundError(Exception): ...
+
     class VideoUnavailableError(Exception): ...
 
     errors_mod = MagicMock()
@@ -210,7 +230,10 @@ def test_transcripts_disabled_returns_empty() -> None:
     api.fetch.side_effect = transcripts_disabled_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     assert docs == []
@@ -222,7 +245,10 @@ def test_no_transcript_found_returns_empty() -> None:
     api.fetch.side_effect = no_transcript_found_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     assert docs == []
@@ -234,7 +260,10 @@ def test_video_unavailable_returns_empty() -> None:
     api.fetch.side_effect = video_unavailable_error()
     mock_lib.YouTubeTranscriptApi.return_value = api
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = YouTubeLoader(FAKE_ID).load()
 
     assert docs == []
@@ -246,7 +275,10 @@ def test_unexpected_error_raises_runtime_error() -> None:
     api.fetch.side_effect = ConnectionError("timeout")
     mock_lib.YouTubeTranscriptApi.return_value = api
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         with pytest.raises(RuntimeError, match="Failed to fetch transcript"):
             YouTubeLoader(FAKE_ID).load()
 
@@ -267,7 +299,10 @@ def test_aload_returns_documents() -> None:
     mock_lib._errors.NoTranscriptFound = Exception
     mock_lib._errors.VideoUnavailable = Exception
 
-    with patch.dict("sys.modules", {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors}):
+    with patch.dict(
+        "sys.modules",
+        {"youtube_transcript_api": mock_lib, "youtube_transcript_api._errors": mock_lib._errors},
+    ):
         docs = asyncio.run(YouTubeLoader(FAKE_ID).aload())
 
     assert len(docs) == 1

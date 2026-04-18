@@ -37,9 +37,7 @@ def _extract_video_id(url_or_id: str) -> str:
     if _VIDEO_ID_RE.match(url_or_id):
         return url_or_id
 
-    raise ValueError(
-        f"Could not extract a valid YouTube video ID from: {url_or_id!r}"
-    )
+    raise ValueError(f"Could not extract a valid YouTube video ID from: {url_or_id!r}")
 
 
 class YouTubeLoader:
