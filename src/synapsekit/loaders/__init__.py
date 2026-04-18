@@ -9,6 +9,7 @@ from .s3 import S3Loader
 from .text import StringLoader, TextLoader
 
 __all__ = [
+    "AirtableLoader",
     "ArXivLoader",
     "AudioLoader",
     "AzureBlobLoader",
@@ -58,6 +59,7 @@ __all__ = [
 ]
 
 _LOADERS = {
+    "AirtableLoader": ".airtable",
     "ArXivLoader": ".arxiv",
     "AzureBlobLoader": ".azure_blob",
     "PDFLoader": ".pdf",

@@ -572,6 +572,7 @@ __all__ = [
     "ImageContent",
     "MultimodalMessage",
     "AudioLoader",
+    "AirtableLoader",
     "VideoLoader",
     "ImageLoader",
     "YAMLLoader",
@@ -628,6 +629,7 @@ _LAZY_IMPORTS = {
     "RedisCheckpointer": "graph.checkpointers.redis",
     "PostgresCheckpointer": "graph.checkpointers.postgres",
     # Loaders
+    "AirtableLoader": "loaders.airtable",
     "AudioLoader": "loaders.audio",
     "VideoLoader": "loaders.video",
     "DocxLoader": "loaders.docx",

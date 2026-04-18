@@ -145,6 +145,7 @@ def test_llm_provider_count_matches_spec():
 # ---------------------------------------------------------------------------
 
 LOADER_NAMES = [
+    "AirtableLoader",
     "ArXivLoader",
     "AudioLoader",
     "AzureBlobLoader",
@@ -202,7 +203,7 @@ def test_all_loaders_in_all_list():
 
 
 def test_loader_count_matches_spec():
-    """We have exactly 46 names in the loaders __all__ (includes Document + StringLoader)."""
+    """We have exactly 47 names in the loaders __all__ (includes Document + StringLoader)."""
     import synapsekit.loaders as loaders_mod
 
     assert len(loaders_mod.__all__) == len(LOADER_NAMES)
