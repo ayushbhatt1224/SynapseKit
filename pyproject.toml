@@ -92,7 +92,7 @@ gpt4all = ["gpt4all>=2.0"]
 ernie = ["erniebot>=0.5"]
 minimax = ["httpx>=0.27"]
 serve = ["fastapi>=0.110", "uvicorn[standard]>=0.29"]
-postgres = ["psycopg[binary]>=3.1"]
+postgres = ["psycopg[binary]>=3.1", "asyncpg>=0.29"]
 pgvector = ["psycopg[binary]>=3.1", "pgvector>=0.2"]
 wolfram = ["wolframalpha>=5.0"]
 dynamodb = ["boto3>=1.34"]
@@ -155,6 +155,7 @@ all = [
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
     "psycopg[binary]>=3.1",
+    "asyncpg>=0.29",
     "groq>=0.9",
     "llama-cpp-python>=0.2",
     "erniebot>=0.5",
