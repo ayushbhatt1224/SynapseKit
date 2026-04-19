@@ -13,6 +13,7 @@ from synapsekit.agents.tools.browser import BrowserTool
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _mock_page(
     *,
     title: str = "Test Page",
@@ -244,10 +245,12 @@ class TestReading:
     @pytest.mark.asyncio
     async def test_get_links(self):
         tool = BrowserTool(persistent_session=True)
-        page = _mock_page(links=[
-            {"text": "Google", "href": "https://google.com"},
-            {"text": "GitHub", "href": "https://github.com"},
-        ])
+        page = _mock_page(
+            links=[
+                {"text": "Google", "href": "https://google.com"},
+                {"text": "GitHub", "href": "https://github.com"},
+            ]
+        )
         _patch_browser(tool, page)
 
         result = await tool.run(action="get_links")
@@ -316,9 +319,7 @@ class TestInteraction:
 
         # wait_for_selector called before fill
         page.wait_for_selector.assert_awaited()
-        page.fill.assert_awaited_once_with(
-            "input[name=email]", "test@example.com", timeout=30000
-        )
+        page.fill.assert_awaited_once_with("input[name=email]", "test@example.com", timeout=30000)
         assert "Filled" in result.output
 
     @pytest.mark.asyncio
@@ -328,9 +329,7 @@ class TestInteraction:
         page.url = "https://example.com"
         _patch_browser(tool, page)
 
-        result = await tool.run(
-            action="select", selector="select#country", value="US"
-        )
+        result = await tool.run(action="select", selector="select#country", value="US")
 
         page.wait_for_selector.assert_awaited()
         page.select_option.assert_awaited_once()

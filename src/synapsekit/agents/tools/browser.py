@@ -157,9 +157,7 @@ class BrowserTool(BaseTool):
         try:
             from playwright.async_api import async_playwright
         except ImportError:
-            raise ImportError(
-                "playwright is required: pip install synapsekit[browser]"
-            ) from None
+            raise ImportError("playwright is required: pip install synapsekit[browser]") from None
 
         self._playwright = await async_playwright().start()
         self._browser = await self._playwright.chromium.launch(headless=self.headless)
@@ -202,18 +200,12 @@ class BrowserTool(BaseTool):
 
         # Allowed-domains whitelist
         if self.allowed_domains is not None and not any(
-            host == d.lower() or host.endswith("." + d.lower())
-            for d in self.allowed_domains
+            host == d.lower() or host.endswith("." + d.lower()) for d in self.allowed_domains
         ):
-            raise ValueError(
-                f"Domain {host!r} is not in allowed_domains: {self.allowed_domains}"
-            )
+            raise ValueError(f"Domain {host!r} is not in allowed_domains: {self.allowed_domains}")
 
         # Blocked-domains blacklist
-        if any(
-            host == d.lower() or host.endswith("." + d.lower())
-            for d in self.blocked_domains
-        ):
+        if any(host == d.lower() or host.endswith("." + d.lower()) for d in self.blocked_domains):
             raise ValueError(f"Domain {host!r} is blocked.")
 
     # ------------------------------------------------------------------
@@ -227,9 +219,7 @@ class BrowserTool(BaseTool):
         raw = await self._page.screenshot(type="png")
         return base64.b64encode(raw).decode()
 
-    def _result_with_screenshot(
-        self, output: str, screenshot_b64: str | None
-    ) -> ToolResult:
+    def _result_with_screenshot(self, output: str, screenshot_b64: str | None) -> ToolResult:
         """Build a ``ToolResult``, appending screenshot info when present."""
         if screenshot_b64:
             output += f"\n[screenshot attached: {len(screenshot_b64)} chars base64]"
@@ -246,9 +236,7 @@ class BrowserTool(BaseTool):
                 f"Max page limit reached ({self.max_pages}). No further navigations allowed."
             )
         if self.max_depth is not None and self._depth >= self.max_depth:
-            raise RuntimeError(
-                f"Max navigation depth exceeded ({self.max_depth})."
-            )
+            raise RuntimeError(f"Max navigation depth exceeded ({self.max_depth}).")
 
         # Pre-navigation domain check
         self._validate_url(url)
@@ -263,9 +251,7 @@ class BrowserTool(BaseTool):
 
         title = await self._page.title()
         shot = await self._maybe_screenshot()
-        return self._result_with_screenshot(
-            f"Navigated to {current_url} — title: {title}", shot
-        )
+        return self._result_with_screenshot(f"Navigated to {current_url} — title: {title}", shot)
 
     async def _back(self, timeout: float) -> ToolResult:
         await self._page.go_back(timeout=int(timeout * 1000))
@@ -377,9 +363,7 @@ class BrowserTool(BaseTool):
                 f"Failed to submit via selector '{selector}': {e} (URL: {current_url})"
             ) from e
         with contextlib.suppress(Exception):
-            await self._page.wait_for_load_state(
-                "domcontentloaded", timeout=int(timeout * 1000)
-            )
+            await self._page.wait_for_load_state("domcontentloaded", timeout=int(timeout * 1000))
         # Brief fallback pause for any JS-driven post-submit transitions
         await self._page.wait_for_timeout(500)
         shot = await self._maybe_screenshot()
@@ -394,9 +378,7 @@ class BrowserTool(BaseTool):
         return ToolResult(output=f"Element matched: {selector}")
 
     async def _wait_for_navigation(self, timeout: float) -> ToolResult:
-        await self._page.wait_for_load_state(
-            "domcontentloaded", timeout=int(timeout * 1000)
-        )
+        await self._page.wait_for_load_state("domcontentloaded", timeout=int(timeout * 1000))
         title = await self._page.title()
         return ToolResult(output=f"Navigation complete — title: {title}")
 
@@ -488,9 +470,7 @@ class BrowserTool(BaseTool):
         if action in ("click", "fill", "select", "submit", "wait_for"):
             selector = kwargs.get("selector", "")
             if not selector:
-                return ToolResult(
-                    output="", error=f"'selector' is required for {action}."
-                )
+                return ToolResult(output="", error=f"'selector' is required for {action}.")
             if action == "click":
                 return await self._click(selector, timeout)
             if action == "fill":
@@ -510,9 +490,7 @@ class BrowserTool(BaseTool):
         if action == "evaluate":
             script = kwargs.get("value", "")
             if not script:
-                return ToolResult(
-                    output="", error="'value' (JS code) is required for evaluate."
-                )
+                return ToolResult(output="", error="'value' (JS code) is required for evaluate.")
             return await self._evaluate(script)
 
         return ToolResult(output="", error=f"Unknown action: {action!r}")

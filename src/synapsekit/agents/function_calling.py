@@ -78,8 +78,7 @@ class FunctionCallingAgent:
 
         return (
             f"{self._system_prompt}\n\n"
-            "Relevant persistent memories (use when helpful and factual):\n"
-            + "\n".join(lines)
+            "Relevant persistent memories (use when helpful and factual):\n" + "\n".join(lines)
         )
 
     async def _store_episode(self, query: str, answer: str) -> None:

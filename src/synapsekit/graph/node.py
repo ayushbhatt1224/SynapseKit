@@ -40,7 +40,11 @@ def agent_node(
 
         changed = False
 
-        if memory_key and memory_key in state and getattr(config, "memory", None) is not state[memory_key]:
+        if (
+            memory_key
+            and memory_key in state
+            and getattr(config, "memory", None) is not state[memory_key]
+        ):
             config.memory = state[memory_key]
             changed = True
 
