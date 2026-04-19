@@ -168,6 +168,7 @@ LOADER_NAMES = [
     "GoogleDriveLoader",
     "GoogleSheetsLoader",
     "HTMLLoader",
+    "HubSpotLoader",
     "LaTeXLoader",
     "JSONLoader",
     "JiraLoader",

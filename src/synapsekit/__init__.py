@@ -170,6 +170,7 @@ from .loaders.git import GitLoader
 from .loaders.github import GitHubLoader
 from .loaders.google_sheets import GoogleSheetsLoader
 from .loaders.html import HTMLLoader
+from .loaders.hubspot import HubSpotLoader
 from .loaders.image import ImageLoader
 from .loaders.jira import JiraLoader
 from .loaders.json_loader import JSONLoader
@@ -381,6 +382,7 @@ __all__ = [
     "GitHubLoader",
     "GitLoader",
     "GoogleSheetsLoader",
+    "HubSpotLoader",
     "JiraLoader",
     "LaTeXLoader",
     "MarkdownLoader",
@@ -657,6 +659,7 @@ _LAZY_IMPORTS = {
     "DiscordLoader": "loaders.discord",
     "XMLLoader": "loaders.xml_loader",
     "GoogleDriveLoader": "loaders.google_drive",
+    "HubSpotLoader": "loaders.hubspot",
     "MongoDBLoader": "loaders.mongodb",
     "ObsidianLoader": "loaders.obsidian",
     "OneDriveLoader": "loaders.onedrive",
