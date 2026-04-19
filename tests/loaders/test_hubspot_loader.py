@@ -14,6 +14,11 @@ def test_init_requires_object_type() -> None:
         HubSpotLoader(object_type="", access_token="token")
 
 
+def test_init_requires_object_type_when_none() -> None:
+    with pytest.raises(ValueError, match="object_type must be provided"):
+        HubSpotLoader(object_type=None, access_token="token")  # type: ignore[arg-type]
+
+
 def test_init_rejects_unsupported_object_type() -> None:
     with pytest.raises(ValueError, match="object_type must be one of"):
         HubSpotLoader(object_type="companies", access_token="token")
@@ -159,6 +164,16 @@ def test_load_skips_non_mapping_records() -> None:
     docs = loader.load()
     assert len(docs) == 1
     assert docs[0].metadata["id"] == "2"
+
+
+def test_load_handles_none_results() -> None:
+    mock_client = MagicMock()
+    mock_client.crm.contacts.basic_api.get_page.return_value.results = None
+
+    loader = HubSpotLoader(object_type="contacts", client=mock_client)
+    docs = loader.load()
+
+    assert docs == []
 
 
 def test_exports_from_synapsekit_and_loaders_modules() -> None:

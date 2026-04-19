@@ -21,9 +21,10 @@ class HubSpotLoader:
         limit: int = 100,
         client: Any | None = None,
     ) -> None:
-        normalized_object_type = object_type.strip().lower()
-        if not normalized_object_type:
+        if not isinstance(object_type, str) or not object_type.strip():
             raise ValueError("object_type must be provided")
+
+        normalized_object_type = object_type.strip().lower()
         if normalized_object_type not in _SUPPORTED_OBJECT_TYPES:
             raise ValueError("object_type must be one of: contacts, deals, tickets")
 
@@ -56,7 +57,7 @@ class HubSpotLoader:
         properties = self._build_properties()
 
         response = api.get_page(limit=self._limit, archived=False, properties=properties)
-        results = getattr(response, "results", [])
+        results = getattr(response, "results", []) or []
 
         docs: list[Document] = []
         for index, item in enumerate(results):
