@@ -176,6 +176,7 @@ from .loaders.json_loader import JSONLoader
 from .loaders.latex import LaTeXLoader
 from .loaders.markdown import MarkdownLoader
 from .loaders.mongodb import MongoDBLoader
+from .loaders.obsidian import ObsidianLoader
 from .loaders.onedrive import OneDriveLoader
 from .loaders.pdf import PDFLoader
 from .loaders.rss import RSSLoader
@@ -383,6 +384,7 @@ __all__ = [
     "JiraLoader",
     "LaTeXLoader",
     "MarkdownLoader",
+    "ObsidianLoader",
     "MongoDBLoader",
     "DynamoDBLoader",
     "OneDriveLoader",
@@ -656,6 +658,7 @@ _LAZY_IMPORTS = {
     "XMLLoader": "loaders.xml_loader",
     "GoogleDriveLoader": "loaders.google_drive",
     "MongoDBLoader": "loaders.mongodb",
+    "ObsidianLoader": "loaders.obsidian",
     "OneDriveLoader": "loaders.onedrive",
     "AzureBlobLoader": "loaders.azure_blob",
     "BigQueryLoader": "loaders.bigquery",

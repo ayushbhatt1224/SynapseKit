@@ -174,6 +174,7 @@ LOADER_NAMES = [
     "MarkdownLoader",
     "MongoDBLoader",
     "NotionLoader",
+    "ObsidianLoader",
     "OneDriveLoader",
     "PDFLoader",
     "ParquetLoader",
