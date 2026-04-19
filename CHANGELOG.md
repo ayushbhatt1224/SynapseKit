@@ -7,6 +7,24 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **`AgentMemory`** — persistent episodic + semantic memory for agents; SQLite, Redis, Postgres, and in-memory backends; semantic similarity search via cosine over optional embeddings or built-in bloom hash; episodic consolidation window; integrates into `ReactAgent`, `FunctionCallingAgent`, and graph `llm_node`; closes #506
+- **`BrowserTool`** — Playwright-based browser automation tool; selector-based interaction (navigate, click, fill, get_text, screenshot, etc.); domain allow/block lists; optional screenshot-on-action for multimodal models; `pip install synapsekit[browser]`; closes #555
+- **`MongoDBAtlasVectorStore`** — MongoDB Atlas Vector Search backend; MQL metadata filter passthrough; configurable vector/text/metadata field names; `pip install synapsekit[mongodb-vector]`; closes #121
+- **Multimodal loaders enhanced** — `AudioLoader` gains Whisper transcription (API + local); `VideoLoader` gains frame extraction + multi-track audio; `ImageLoader` enhanced with vision-model captioning; `RAG.add()` facade auto-routes by MIME type; closes #510
+- **`YouTubeLoader`** — load video transcripts via `youtube-transcript-api`; accepts full URLs or bare video IDs; language override; `pip install synapsekit[youtube_transcript]`; closes #560
+- **`ObsidianLoader`** — load Obsidian vault Markdown notes; extracts YAML frontmatter, wikilinks, and tags into metadata; recursive vault traversal; no extra deps; closes #562
+- **`AirtableLoader`** — load Airtable records via `pyairtable`; configurable `text_fields` and `metadata_fields`; `pip install synapsekit[airtable]`; closes #561
+- **`SitemapLoader`** — recursive sitemap XML parsing with HTTP page fetch; BS4 text extraction; configurable max depth and concurrency; `pip install synapsekit[sitemap]` (uses beautifulsoup4); closes #557
+- **`HubSpotLoader`** — load HubSpot CRM contacts, deals, and tickets via `hubspot-api-client`; configurable `text_fields` and `metadata_fields`; `pip install synapsekit[hubspot]`; closes #88
+- **`SalesforceLoader`** — load Salesforce records via SOQL query using `simple_salesforce`; configurable field mappings; `pip install synapsekit[salesforce]`; closes #89
+- **`BigQueryLoader`** — load BigQuery table rows or query results via `google-cloud-bigquery`; supports both `table` (full scan) and `query` modes; `pip install synapsekit[bigquery]`; closes #91
+
+---
+
 ## [1.5.6] — 2026-04-16
 
 ### Added
