@@ -145,6 +145,7 @@ def test_llm_provider_count_matches_spec():
 # ---------------------------------------------------------------------------
 
 LOADER_NAMES = [
+    "AirtableLoader",
     "ArXivLoader",
     "AudioLoader",
     "AzureBlobLoader",

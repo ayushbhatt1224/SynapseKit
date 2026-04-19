@@ -11,6 +11,7 @@ from .salesforce import SalesforceLoader
 from .text import StringLoader, TextLoader
 
 __all__ = [
+    "AirtableLoader",
     "ArXivLoader",
     "AudioLoader",
     "AzureBlobLoader",
@@ -64,6 +65,7 @@ __all__ = [
 ]
 
 _LOADERS = {
+    "AirtableLoader": ".airtable",
     "ArXivLoader": ".arxiv",
     "AzureBlobLoader": ".azure_blob",
     "BigQueryLoader": ".bigquery",
