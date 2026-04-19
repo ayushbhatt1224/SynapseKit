@@ -179,6 +179,7 @@ LOADER_NAMES = [
     "RTFLoader",
     "RedisLoader",
     "S3Loader",
+    "SalesforceLoader",
     "SitemapLoader",
     "SQLLoader",
     "SlackLoader",
