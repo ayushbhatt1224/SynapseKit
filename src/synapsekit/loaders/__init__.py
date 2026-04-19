@@ -2,6 +2,7 @@ from typing import Any
 
 from .azure_blob import AzureBlobLoader
 from .base import Document
+from .hubspot import HubSpotLoader
 from .markdown import MarkdownLoader
 from .mongodb import MongoDBLoader
 from .onedrive import OneDriveLoader
@@ -30,6 +31,7 @@ __all__ = [
     "GoogleDriveLoader",
     "GoogleSheetsLoader",
     "HTMLLoader",
+    "HubSpotLoader",
     "LaTeXLoader",
     "JSONLoader",
     "JiraLoader",
@@ -81,6 +83,7 @@ _LOADERS = {
     "GitLoader": ".git",
     "GoogleDriveLoader": ".google_drive",
     "GoogleSheetsLoader": ".google_sheets",
+    "HubSpotLoader": ".hubspot",
     "JiraLoader": ".jira",
     "SlackLoader": ".slack",
     "NotionLoader": ".notion",
