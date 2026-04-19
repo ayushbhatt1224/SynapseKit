@@ -3,6 +3,7 @@
 Verifies cache put/get/eviction/stats/make_key and ConversationMemory
 window enforcement, add/get/clear, format_context, and edge cases.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -10,10 +11,10 @@ import pytest
 from synapsekit.llm._cache import AsyncLRUCache
 from synapsekit.memory.conversation import ConversationMemory
 
-
 # ---------------------------------------------------------------------------
 # AsyncLRUCache
 # ---------------------------------------------------------------------------
+
 
 class TestAsyncLRUCache:
     def test_put_and_get_hit(self):
@@ -40,9 +41,9 @@ class TestAsyncLRUCache:
         # Insert 'd' — should evict 'b' (least recently used)
         cache.put("d", 4)
         assert cache.get("b") is None  # evicted
-        assert cache.get("a") == 1    # still present
-        assert cache.get("c") == 3    # still present
-        assert cache.get("d") == 4    # just inserted
+        assert cache.get("a") == 1  # still present
+        assert cache.get("c") == 3  # still present
+        assert cache.get("d") == 4  # just inserted
 
     def test_put_existing_key_moves_to_end(self):
         cache = AsyncLRUCache(maxsize=2)
@@ -81,8 +82,8 @@ class TestAsyncLRUCache:
     def test_hit_miss_counters_accumulate(self):
         cache = AsyncLRUCache(maxsize=5)
         cache.put("k", "v")
-        cache.get("k")      # hit
-        cache.get("k")      # hit
+        cache.get("k")  # hit
+        cache.get("k")  # hit
         cache.get("miss1")  # miss
         cache.get("miss2")  # miss
         assert cache.hits == 2
@@ -128,6 +129,7 @@ class TestAsyncLRUCache:
 # ConversationMemory
 # ---------------------------------------------------------------------------
 
+
 class TestConversationMemory:
     def test_add_and_get_messages(self):
         mem = ConversationMemory(window=5)
@@ -140,7 +142,7 @@ class TestConversationMemory:
 
     def test_window_limits_messages(self):
         mem = ConversationMemory(window=2)
-        # window=2 keeps 4 messages (2 turns × 2 messages per turn)
+        # window=2 keeps 4 messages (2 turns x 2 messages per turn)
         for i in range(5):
             mem.add("user", f"q{i}")
             mem.add("assistant", f"a{i}")

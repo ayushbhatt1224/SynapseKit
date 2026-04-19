@@ -1,23 +1,24 @@
 """Production-grade tests for AgentMemory — covers async embedder, cosine edge cases,
 Redis/Postgres backends (mocked), consolidation with LLM, count/delete, unknown backend,
 and integration edge cases."""
+
 from __future__ import annotations
 
 import sys
 from datetime import datetime, timedelta, timezone
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from synapsekit.memory import AgentMemory
 from synapsekit.memory.agent_memory import AgentMemory as _AgentMemory
 from synapsekit.memory.backends.memory import InMemoryMemoryBackend
-from synapsekit.memory.base import BaseMemoryBackend, MemoryRecord, MemoryType
-
+from synapsekit.memory.base import MemoryRecord, MemoryType
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_record(
     agent_id: str = "agent-1",
@@ -29,7 +30,7 @@ def _make_record(
 ) -> MemoryRecord:
     now = datetime.now(timezone.utc) - timedelta(days=age_days)
     return MemoryRecord(
-        id=f"rec-{abs(hash(content + str(age_days)))%99999}",
+        id=f"rec-{abs(hash(content + str(age_days))) % 99999}",
         agent_id=agent_id,
         content=content,
         memory_type=memory_type,
@@ -46,6 +47,7 @@ def _make_record(
 # 1. _default_embed edge cases
 # ---------------------------------------------------------------------------
 
+
 def test_default_embed_empty_text_returns_zeros():
     mem = _AgentMemory(backend="memory")
     result = mem._default_embed("")
@@ -55,6 +57,7 @@ def test_default_embed_empty_text_returns_zeros():
 
 def test_default_embed_nonempty_is_unit_normalised():
     import math
+
     mem = _AgentMemory(backend="memory")
     vec = mem._default_embed("the quick brown fox")
     norm = math.sqrt(sum(v * v for v in vec))
@@ -64,6 +67,7 @@ def test_default_embed_nonempty_is_unit_normalised():
 # ---------------------------------------------------------------------------
 # 2. _embed_text with sync and async embedders
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_embed_text_uses_async_embedder():
@@ -94,6 +98,7 @@ async def test_embed_text_uses_sync_embedder():
 # 3. _cosine edge cases
 # ---------------------------------------------------------------------------
 
+
 def test_cosine_empty_vectors_returns_zero():
     assert _AgentMemory._cosine([], []) == 0.0
 
@@ -118,6 +123,7 @@ def test_cosine_identical_vectors():
 # 4. Backend resolution
 # ---------------------------------------------------------------------------
 
+
 def test_unknown_backend_raises():
     with pytest.raises(ValueError, match="Unknown backend"):
         _AgentMemory(backend="nonexistent_db")
@@ -138,10 +144,13 @@ def test_custom_backend_instance_accepted():
 # 5. store → recall round-trip (in-memory backend)
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_store_recall_basic():
     mem = AgentMemory(backend="memory")
-    await mem.store(agent_id="user-1", content="Python was created by Guido van Rossum", memory_type="semantic")
+    await mem.store(
+        agent_id="user-1", content="Python was created by Guido van Rossum", memory_type="semantic"
+    )
     results = await mem.recall(agent_id="user-1", query="who created Python")
     assert len(results) >= 1
     assert any("Guido" in r.content for r in results)
@@ -192,6 +201,7 @@ async def test_recall_increments_access_count():
 # 6. count + delete + clear
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_count_returns_correct_total():
     mem = AgentMemory(backend="memory")
@@ -229,6 +239,7 @@ async def test_clear_wipes_agent_memory():
 # 7. TTL expiry
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_expired_records_pruned_before_recall():
     mem = AgentMemory(backend="memory")
@@ -240,6 +251,7 @@ async def test_expired_records_pruned_before_recall():
 # ---------------------------------------------------------------------------
 # 8. Consolidation
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_consolidate_empty_returns_none():
@@ -291,6 +303,7 @@ async def test_consolidate_explicit_limit():
 # ---------------------------------------------------------------------------
 # 9. InMemoryMemoryBackend — full branch coverage
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_inmemory_backend_touch_updates_accessed_at():
@@ -365,6 +378,7 @@ async def test_inmemory_backend_count_by_type():
 # 10. Redis backend — mocked
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_redis_backend_store_calls_pipeline():
     from synapsekit.memory.backends.redis import RedisMemoryBackend
@@ -425,6 +439,7 @@ async def test_redis_backend_import_error():
         if "synapsekit.memory.backends.redis" in sys.modules:
             del sys.modules["synapsekit.memory.backends.redis"]
         from synapsekit.memory.backends.redis import RedisMemoryBackend
+
         with pytest.raises(ImportError, match="redis package required"):
             RedisMemoryBackend(url="redis://localhost:6379")
     finally:
@@ -436,6 +451,7 @@ async def test_redis_backend_import_error():
 # 11. Postgres backend — mocked
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_postgres_backend_store_uses_execute():
     from synapsekit.memory.backends.postgres import PostgresMemoryBackend
@@ -444,7 +460,7 @@ async def test_postgres_backend_store_uses_execute():
     mock_conn.execute = AsyncMock()
 
     mock_pool = MagicMock()
-    mock_pool.acquire = MagicMock(return_value=_async_ctx(mock_conn))
+    mock_pool.acquire = MagicMock(return_value=_AsyncCtx(mock_conn))
 
     backend = PostgresMemoryBackend.__new__(PostgresMemoryBackend)
     backend._pool = mock_pool
@@ -463,7 +479,7 @@ async def test_postgres_backend_fetch_empty_returns_empty_list():
     mock_conn.fetch = AsyncMock(return_value=[])
 
     mock_pool = MagicMock()
-    mock_pool.acquire = MagicMock(return_value=_async_ctx(mock_conn))
+    mock_pool.acquire = MagicMock(return_value=_AsyncCtx(mock_conn))
 
     backend = PostgresMemoryBackend.__new__(PostgresMemoryBackend)
     backend._pool = mock_pool
@@ -477,16 +493,18 @@ async def test_postgres_backend_fetch_empty_returns_empty_list():
 # 12. MongoDBAtlasVectorStore — mocked
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_mongodb_atlas_add_and_search():
     import numpy as np
+
     from synapsekit.retrieval.mongodb_atlas import MongoDBAtlasVectorStore
 
     mock_collection = MagicMock()
     mock_collection.insert_many = MagicMock()
-    mock_collection.aggregate = MagicMock(return_value=[
-        {"text": "hello", "metadata": {"src": "test"}, "score": 0.95}
-    ])
+    mock_collection.aggregate = MagicMock(
+        return_value=[{"text": "hello", "metadata": {"src": "test"}, "score": 0.95}]
+    )
 
     mock_db = MagicMock()
     mock_db.__getitem__ = MagicMock(return_value=mock_collection)
@@ -515,9 +533,9 @@ async def test_mongodb_atlas_search_top_k_zero():
 
     mock_embeddings = AsyncMock()
     mock_client = MagicMock()
-    mock_client.__getitem__ = MagicMock(return_value=MagicMock(
-        __getitem__=MagicMock(return_value=MagicMock())
-    ))
+    mock_client.__getitem__ = MagicMock(
+        return_value=MagicMock(__getitem__=MagicMock(return_value=MagicMock()))
+    )
     store = MongoDBAtlasVectorStore(embedding_backend=mock_embeddings, client=mock_client)
     results = await store.search("query", top_k=0)
     assert results == []
@@ -542,6 +560,7 @@ async def test_mongodb_atlas_add_empty_is_noop():
 @pytest.mark.asyncio
 async def test_mongodb_atlas_add_metadata_length_mismatch_raises():
     import numpy as np
+
     from synapsekit.retrieval.mongodb_atlas import MongoDBAtlasVectorStore
 
     mock_embeddings = AsyncMock()
@@ -560,6 +579,7 @@ async def test_mongodb_atlas_add_metadata_length_mismatch_raises():
 async def test_mongodb_atlas_metadata_filter_mql_passthrough():
     """Raw MQL operators ($and/$or) are passed through unchanged."""
     import numpy as np
+
     from synapsekit.retrieval.mongodb_atlas import MongoDBAtlasVectorStore
 
     captured_pipelines: list = []
@@ -587,6 +607,7 @@ async def test_mongodb_atlas_metadata_filter_mql_passthrough():
 # 13. Custom async embedder round-trip through AgentMemory
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_custom_async_embedder_called_on_store_and_recall():
     calls: list[str] = []
@@ -594,6 +615,7 @@ async def test_custom_async_embedder_called_on_store_and_recall():
     async def tracking_embedder(text: str) -> list[float]:
         calls.append(text)
         import hashlib
+
         h = int(hashlib.md5(text.encode()).hexdigest(), 16)
         return [(h >> i & 1) * 1.0 for i in range(128)]
 
@@ -607,6 +629,7 @@ async def test_custom_async_embedder_called_on_store_and_recall():
 # ---------------------------------------------------------------------------
 # 14. ReactAgent with persistent_memory plumbing
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_react_agent_accepts_persistent_memory():
@@ -636,8 +659,10 @@ async def test_react_agent_accepts_persistent_memory():
 # Utility: async context manager helper
 # ---------------------------------------------------------------------------
 
-class _async_ctx:
+
+class _AsyncCtx:
     """Minimal async context manager that yields a fixed value."""
+
     def __init__(self, value):
         self._value = value
 

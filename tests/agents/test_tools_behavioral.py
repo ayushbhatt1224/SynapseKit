@@ -5,6 +5,7 @@ HTTPRequestTool, WebSearchTool, and DuckDuckGoSearchTool behave correctly
 across all code paths, including error branches, boundary values, and
 security guards. No real network or subprocess calls.
 """
+
 from __future__ import annotations
 
 import sys
@@ -19,10 +20,10 @@ from synapsekit.agents.tools.file_write import FileWriteTool
 from synapsekit.agents.tools.http_request import HTTPRequestTool
 from synapsekit.agents.tools.shell import ShellTool
 
-
 # ---------------------------------------------------------------------------
 # CalculatorTool
 # ---------------------------------------------------------------------------
+
 
 class TestCalculatorTool:
     @pytest.mark.asyncio
@@ -46,7 +47,6 @@ class TestCalculatorTool:
 
     @pytest.mark.asyncio
     async def test_trig_function(self):
-        import math
         tool = CalculatorTool()
         result = await tool.run(expression="round(sin(pi/2), 5)")
         assert result.output == "1.0"
@@ -93,6 +93,7 @@ class TestCalculatorTool:
     @pytest.mark.asyncio
     async def test_pi_constant(self):
         import math
+
         tool = CalculatorTool()
         result = await tool.run(expression="round(pi, 5)")
         assert result.output == str(round(math.pi, 5))
@@ -107,6 +108,7 @@ class TestCalculatorTool:
 # ---------------------------------------------------------------------------
 # DateTimeTool
 # ---------------------------------------------------------------------------
+
 
 class TestDateTimeTool:
     @pytest.mark.asyncio
@@ -189,6 +191,7 @@ class TestDateTimeTool:
 # ShellTool
 # ---------------------------------------------------------------------------
 
+
 class TestShellTool:
     @pytest.mark.asyncio
     async def test_echo_command(self):
@@ -260,6 +263,7 @@ class TestShellTool:
 # ---------------------------------------------------------------------------
 # FileWriteTool
 # ---------------------------------------------------------------------------
+
 
 class TestFileWriteTool:
     @pytest.mark.asyncio
@@ -337,6 +341,7 @@ class TestFileWriteTool:
 # ---------------------------------------------------------------------------
 # HTTPRequestTool
 # ---------------------------------------------------------------------------
+
 
 class TestHTTPRequestTool:
     @pytest.mark.asyncio
@@ -448,7 +453,7 @@ class TestHTTPRequestTool:
         mock_aiohttp.ClientTimeout = MagicMock(return_value=MagicMock())
 
         with patch.dict(sys.modules, {"aiohttp": mock_aiohttp}):
-            result = await tool.run(url="https://api.example.com", method="POST", body='{"key":"val"}')
+            await tool.run(url="https://api.example.com", method="POST", body='{"key":"val"}')
 
         assert captured["method"] == "POST"
         assert captured["data"] == '{"key":"val"}'
@@ -458,10 +463,12 @@ class TestHTTPRequestTool:
 # WebSearchTool
 # ---------------------------------------------------------------------------
 
+
 class TestWebSearchTool:
     @pytest.mark.asyncio
     async def test_no_query_returns_error(self):
         from synapsekit.agents.tools.web_search import WebSearchTool
+
         tool = WebSearchTool()
         result = await tool.run(query="")
         assert result.error is not None
@@ -470,15 +477,18 @@ class TestWebSearchTool:
     @pytest.mark.asyncio
     async def test_returns_formatted_results(self):
         from synapsekit.agents.tools.web_search import WebSearchTool
+
         tool = WebSearchTool()
 
         mock_ddgs_instance = MagicMock()
         mock_ddgs_instance.__enter__ = MagicMock(return_value=mock_ddgs_instance)
         mock_ddgs_instance.__exit__ = MagicMock(return_value=False)
-        mock_ddgs_instance.text = MagicMock(return_value=[
-            {"title": "Python Docs", "href": "https://python.org", "body": "Official docs"},
-            {"title": "Python Tut", "href": "https://tutorial.org", "body": "Learn Python"},
-        ])
+        mock_ddgs_instance.text = MagicMock(
+            return_value=[
+                {"title": "Python Docs", "href": "https://python.org", "body": "Official docs"},
+                {"title": "Python Tut", "href": "https://tutorial.org", "body": "Learn Python"},
+            ]
+        )
 
         mock_ddgs_cls = MagicMock(return_value=mock_ddgs_instance)
 
@@ -492,6 +502,7 @@ class TestWebSearchTool:
     @pytest.mark.asyncio
     async def test_no_results_returns_message(self):
         from synapsekit.agents.tools.web_search import WebSearchTool
+
         tool = WebSearchTool()
 
         mock_ddgs_instance = MagicMock()
@@ -508,6 +519,7 @@ class TestWebSearchTool:
     @pytest.mark.asyncio
     async def test_import_error_raises(self):
         from synapsekit.agents.tools.web_search import WebSearchTool
+
         tool = WebSearchTool()
         with patch.dict(sys.modules, {"duckduckgo_search": None}):
             with pytest.raises(ImportError, match="duckduckgo-search required"):
@@ -516,6 +528,7 @@ class TestWebSearchTool:
     @pytest.mark.asyncio
     async def test_search_exception_returns_error(self):
         from synapsekit.agents.tools.web_search import WebSearchTool
+
         tool = WebSearchTool()
 
         mock_ddgs_instance = MagicMock()
@@ -535,18 +548,22 @@ class TestWebSearchTool:
 # DuckDuckGoSearchTool
 # ---------------------------------------------------------------------------
 
+
 class TestDuckDuckGoSearchTool:
     @pytest.mark.asyncio
     async def test_text_search(self):
         from synapsekit.agents.tools.duck_search import DuckDuckGoSearchTool
+
         tool = DuckDuckGoSearchTool()
 
         mock_ddgs_instance = MagicMock()
         mock_ddgs_instance.__enter__ = MagicMock(return_value=mock_ddgs_instance)
         mock_ddgs_instance.__exit__ = MagicMock(return_value=False)
-        mock_ddgs_instance.text = MagicMock(return_value=[
-            {"title": "Result 1", "href": "https://r1.com", "body": "snippet 1"},
-        ])
+        mock_ddgs_instance.text = MagicMock(
+            return_value=[
+                {"title": "Result 1", "href": "https://r1.com", "body": "snippet 1"},
+            ]
+        )
         mock_ddgs_cls = MagicMock(return_value=mock_ddgs_instance)
 
         with patch.dict(sys.modules, {"duckduckgo_search": MagicMock(DDGS=mock_ddgs_cls)}):
@@ -558,14 +575,17 @@ class TestDuckDuckGoSearchTool:
     @pytest.mark.asyncio
     async def test_news_search_type(self):
         from synapsekit.agents.tools.duck_search import DuckDuckGoSearchTool
+
         tool = DuckDuckGoSearchTool()
 
         mock_ddgs_instance = MagicMock()
         mock_ddgs_instance.__enter__ = MagicMock(return_value=mock_ddgs_instance)
         mock_ddgs_instance.__exit__ = MagicMock(return_value=False)
-        mock_ddgs_instance.news = MagicMock(return_value=[
-            {"title": "News Item", "url": "https://news.com", "excerpt": "news snippet"},
-        ])
+        mock_ddgs_instance.news = MagicMock(
+            return_value=[
+                {"title": "News Item", "url": "https://news.com", "excerpt": "news snippet"},
+            ]
+        )
         mock_ddgs_cls = MagicMock(return_value=mock_ddgs_instance)
 
         with patch.dict(sys.modules, {"duckduckgo_search": MagicMock(DDGS=mock_ddgs_cls)}):
@@ -577,6 +597,7 @@ class TestDuckDuckGoSearchTool:
     @pytest.mark.asyncio
     async def test_no_query_returns_error(self):
         from synapsekit.agents.tools.duck_search import DuckDuckGoSearchTool
+
         tool = DuckDuckGoSearchTool()
         result = await tool.run(query="")
         assert result.error is not None
@@ -584,14 +605,17 @@ class TestDuckDuckGoSearchTool:
     @pytest.mark.asyncio
     async def test_input_kwarg_fallback(self):
         from synapsekit.agents.tools.duck_search import DuckDuckGoSearchTool
+
         tool = DuckDuckGoSearchTool()
 
         mock_ddgs_instance = MagicMock()
         mock_ddgs_instance.__enter__ = MagicMock(return_value=mock_ddgs_instance)
         mock_ddgs_instance.__exit__ = MagicMock(return_value=False)
-        mock_ddgs_instance.text = MagicMock(return_value=[
-            {"title": "T", "href": "https://x.com", "body": "b"},
-        ])
+        mock_ddgs_instance.text = MagicMock(
+            return_value=[
+                {"title": "T", "href": "https://x.com", "body": "b"},
+            ]
+        )
         mock_ddgs_cls = MagicMock(return_value=mock_ddgs_instance)
 
         with patch.dict(sys.modules, {"duckduckgo_search": MagicMock(DDGS=mock_ddgs_cls)}):

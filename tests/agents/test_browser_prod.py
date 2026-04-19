@@ -6,6 +6,7 @@ run() ImportError passthrough, no-action guard.
 
 All Playwright calls are mocked — no real browser is started.
 """
+
 from __future__ import annotations
 
 import sys
@@ -13,13 +14,12 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from synapsekit.agents.tools.browser import BrowserTool, _MAX_HTML_LENGTH
-from synapsekit.agents.base import ToolResult
-
+from synapsekit.agents.tools.browser import _MAX_HTML_LENGTH, BrowserTool
 
 # ---------------------------------------------------------------------------
 # Helpers — build a BrowserTool with a pre-wired mock page
 # ---------------------------------------------------------------------------
+
 
 def _browser_with_mock_page(**kwargs) -> tuple[BrowserTool, MagicMock]:
     """Return a BrowserTool whose _page is already a Mock (skip Playwright launch)."""
@@ -221,7 +221,7 @@ async def test_run_no_action_returns_error():
 
 @pytest.mark.asyncio
 async def test_run_close_closes_browser():
-    tool, mock_page = _browser_with_mock_page()
+    tool, _mock_page = _browser_with_mock_page()
     mock_context = AsyncMock()
     mock_browser = AsyncMock()
     mock_playwright = AsyncMock()
@@ -258,7 +258,7 @@ async def test_run_dispatch_exception_captured():
 
 @pytest.mark.asyncio
 async def test_navigate_max_pages_exceeded():
-    tool, mock_page = _browser_with_mock_page(max_pages=2)
+    tool, _mock_page = _browser_with_mock_page(max_pages=2)
     tool._page_count = 2  # already at limit
 
     with pytest.raises(RuntimeError, match="Max page limit"):
@@ -267,7 +267,7 @@ async def test_navigate_max_pages_exceeded():
 
 @pytest.mark.asyncio
 async def test_navigate_max_depth_exceeded():
-    tool, mock_page = _browser_with_mock_page(max_depth=1)
+    tool, _mock_page = _browser_with_mock_page(max_depth=1)
     tool._depth = 1  # already at limit
 
     with pytest.raises(RuntimeError, match="Max navigation depth"):

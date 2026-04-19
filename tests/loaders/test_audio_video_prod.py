@@ -5,11 +5,10 @@ _normalise_segments (dict + attr-based), _segment_value, _to_float,
 _to_documents fallback, ffmpeg subprocess mocking, cleanup paths,
 _decorate_transcript_doc, _decorate_frame_docs, _frame_timestamp.
 """
+
 from __future__ import annotations
 
-import asyncio
 import sys
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -18,7 +17,6 @@ import pytest
 from synapsekit.loaders.audio import AudioLoader
 from synapsekit.loaders.base import Document
 from synapsekit.loaders.video import VideoLoader
-
 
 # ---------------------------------------------------------------------------
 # AudioLoader — _transcribe_api
@@ -235,10 +233,12 @@ def test_to_documents_empty_segment_text_skipped(tmp_path):
     audio_file.write_bytes(b"fake")
     loader = AudioLoader(str(audio_file))
 
-    result = loader._to_documents({
-        "text": "fallback",
-        "segments": [{"text": "", "start": 0.0, "end": 1.0}],
-    })
+    result = loader._to_documents(
+        {
+            "text": "fallback",
+            "segments": [{"text": "", "start": 0.0, "end": 1.0}],
+        }
+    )
     # Empty segment skipped; fallback text used
     assert all("fallback" in d.text for d in result)
 
@@ -266,10 +266,10 @@ def test_load_transcript_docs_sync(tmp_path):
     loader = VideoLoader(str(video_file))
     transcript_doc = Document(text="from audio", metadata={"start_time": 1.0})
 
-    with patch("synapsekit.loaders.video.AudioLoader") as MockAudio:
+    with patch("synapsekit.loaders.video.AudioLoader") as mock_audio_cls:
         mock_instance = MagicMock()
         mock_instance.load.return_value = [transcript_doc]
-        MockAudio.return_value = mock_instance
+        mock_audio_cls.return_value = mock_instance
         result = loader._load_transcript_docs_sync(audio_path)
 
     assert len(result) == 1
@@ -287,10 +287,10 @@ async def test_load_transcript_docs_async(tmp_path):
     loader = VideoLoader(str(video_file))
     transcript_doc = Document(text="async audio", metadata={"start_time": 2.5})
 
-    with patch("synapsekit.loaders.video.AudioLoader") as MockAudio:
+    with patch("synapsekit.loaders.video.AudioLoader") as mock_audio_cls:
         mock_instance = MagicMock()
         mock_instance.aload = AsyncMock(return_value=[transcript_doc])
-        MockAudio.return_value = mock_instance
+        mock_audio_cls.return_value = mock_instance
         result = await loader._load_transcript_docs_async(audio_path)
 
     assert len(result) == 1
@@ -311,8 +311,10 @@ def test_frame_documents_sync(tmp_path):
     loader = VideoLoader(str(video_file), frame_interval=30)
     frame_doc = Document(text="a frame", metadata={})
 
-    with patch("synapsekit.loaders.video.ImageLoader") as MockImage, \
-         patch("synapsekit.loaders.video.run_sync", return_value=[frame_doc]):
+    with (
+        patch("synapsekit.loaders.video.ImageLoader"),
+        patch("synapsekit.loaders.video.run_sync", return_value=[frame_doc]),
+    ):
         result = loader._frame_documents_sync([frame_path])
 
     assert len(result) == 1
@@ -330,10 +332,10 @@ async def test_frame_documents_async(tmp_path):
     loader = VideoLoader(str(video_file), frame_interval=30)
     frame_doc = Document(text="async frame", metadata={})
 
-    with patch("synapsekit.loaders.video.ImageLoader") as MockImage:
+    with patch("synapsekit.loaders.video.ImageLoader") as mock_image_cls:
         mock_instance = MagicMock()
         mock_instance.aload = AsyncMock(return_value=[frame_doc])
-        MockImage.return_value = mock_instance
+        mock_image_cls.return_value = mock_instance
         result = await loader._frame_documents_async([frame_path])
 
     assert len(result) == 1
@@ -426,7 +428,7 @@ def test_extract_audio_sync_success(tmp_path):
     loader = VideoLoader(str(video_file))
 
     with patch("subprocess.run") as mock_run:
-        audio_path = loader._extract_audio_sync()
+        loader._extract_audio_sync()
 
     mock_run.assert_called_once()
     cmd = mock_run.call_args[0][0]
@@ -450,6 +452,7 @@ def test_extract_audio_sync_ffmpeg_failed(tmp_path):
     loader = VideoLoader(str(video_file))
 
     import subprocess
+
     err = subprocess.CalledProcessError(1, "ffmpeg", stderr=b"error output")
     with patch("subprocess.run", side_effect=err):
         with pytest.raises(RuntimeError, match="ffmpeg failed to extract audio"):
@@ -488,8 +491,7 @@ def test_extract_frames_sync_success(tmp_path):
     fake_frame = frames_dir / "frame_000001.jpg"
     fake_frame.write_bytes(b"img")
 
-    with patch("subprocess.run"), \
-         patch("tempfile.mkdtemp", return_value=str(frames_dir)):
+    with patch("subprocess.run"), patch("tempfile.mkdtemp", return_value=str(frames_dir)):
         result = loader._extract_frames_sync()
 
     assert len(result) == 1

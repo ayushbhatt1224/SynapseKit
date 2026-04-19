@@ -4,6 +4,7 @@ Verifies that generate(), stream(), stream_with_messages(), call_with_tools(),
 token counting, and ImportError handling behave correctly for all major providers.
 All network calls are mocked — no real API keys needed.
 """
+
 from __future__ import annotations
 
 import sys
@@ -12,12 +13,12 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from synapsekit.llm.base import BaseLLM, LLMConfig
-
+from synapsekit.llm.base import LLMConfig
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _cfg(provider: str = "openai", model: str = "gpt-4o-mini", **kw) -> LLMConfig:
     return LLMConfig(model=model, api_key="sk-test", provider=provider, **kw)
@@ -106,6 +107,7 @@ async def test_openai_stream_yields_tokens():
 @pytest.mark.asyncio
 async def test_openai_call_with_tools_returns_tool_calls():
     import json
+
     from synapsekit.llm.openai import OpenAILLM
 
     llm = OpenAILLM(_cfg())
@@ -129,14 +131,20 @@ async def test_openai_call_with_tools_returns_tool_calls():
 
     result = await llm.call_with_tools(
         messages=[{"role": "user", "content": "What's the weather?"}],
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get weather",
-                "parameters": {"type": "object", "properties": {"city": {"type": "string"}}, "required": ["city"]},
-            },
-        }],
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "Get weather",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {"city": {"type": "string"}},
+                        "required": ["city"],
+                    },
+                },
+            }
+        ],
     )
 
     assert result["tool_calls"] is not None
@@ -246,7 +254,7 @@ async def test_anthropic_stream_with_messages_extracts_system():
         {"role": "system", "content": "You are helpful."},
         {"role": "user", "content": "Hello"},
     ]
-    tokens = [t async for t in llm.stream_with_messages(messages)]
+    [t async for t in llm.stream_with_messages(messages)]
 
     assert captured_calls["system"] == "You are helpful."
     user_msgs = [m for m in captured_calls["messages"] if m.get("role") == "user"]
@@ -276,14 +284,16 @@ async def test_anthropic_call_with_tools_returns_tool_use():
 
     result = await llm.call_with_tools(
         messages=[{"role": "user", "content": "search Python"}],
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search",
-                "description": "Web search",
-                "parameters": {"type": "object", "properties": {}},
-            },
-        }],
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "search",
+                    "description": "Web search",
+                    "parameters": {"type": "object", "properties": {}},
+                },
+            }
+        ],
     )
     assert result["tool_calls"][0]["name"] == "search"
     assert result["tool_calls"][0]["arguments"] == {"query": "Python docs"}
@@ -318,13 +328,11 @@ async def test_anthropic_call_with_tools_converts_tool_message():
         {"role": "user", "content": "What is 6*7?"},
         {"role": "tool", "tool_call_id": "call_001", "content": "42"},
     ]
-    result = await llm.call_with_tools(messages=messages, tools=[])
+    await llm.call_with_tools(messages=messages, tools=[])
 
     # Verify tool result was converted to Anthropic's tool_result format
     converted = captured["messages"]
-    tool_result_msg = next(
-        (m for m in converted if isinstance(m.get("content"), list)), None
-    )
+    tool_result_msg = next((m for m in converted if isinstance(m.get("content"), list)), None)
     assert tool_result_msg is not None
     assert tool_result_msg["content"][0]["type"] == "tool_result"
 
@@ -358,6 +366,7 @@ async def test_gemini_stream_yields_tokens():
         async def _chunks():
             for c in [chunk1, chunk2]:
                 yield c
+
         return _chunks()
 
     mock_model = MagicMock()
@@ -410,10 +419,12 @@ async def test_gemini_call_with_tools_returns_tool_calls():
     with patch.dict(sys.modules, {"google": mock_google, "google.generativeai": mock_genai}):
         result = await llm.call_with_tools(
             messages=[{"role": "user", "content": "What time is it?"}],
-            tools=[{
-                "type": "function",
-                "function": {"name": "get_time", "description": "Get time", "parameters": {}},
-            }],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {"name": "get_time", "description": "Get time", "parameters": {}},
+                }
+            ],
         )
 
     assert result["tool_calls"] is not None
