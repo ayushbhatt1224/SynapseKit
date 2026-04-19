@@ -232,6 +232,7 @@ from .retrieval.flare import FLARERetriever
 from .retrieval.graphrag import GraphRAGRetriever, KnowledgeGraph
 from .retrieval.hybrid_search import HybridSearchRetriever
 from .retrieval.hyde import HyDERetriever
+from .retrieval.mongodb_atlas import MongoDBAtlasVectorStore
 from .retrieval.multi_step import MultiStepRetriever
 from .retrieval.parent_document import ParentDocumentRetriever
 from .retrieval.query_decomposition import QueryDecompositionRetriever
@@ -306,6 +307,7 @@ __all__ = [
     "FAISSVectorStore",
     "LanceDBVectorStore",
     "MilvusVectorStore",
+    "MongoDBAtlasVectorStore",
     "PGVectorStore",
     "QdrantVectorStore",
     "PineconeVectorStore",
